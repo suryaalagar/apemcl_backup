@@ -13,7 +13,7 @@ class SettingController extends Controller
      */
     public function index()
     {
-        dd('test');
+        dd('test 123');
     }
 
     /**
