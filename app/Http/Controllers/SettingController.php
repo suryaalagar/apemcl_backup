@@ -13,7 +13,7 @@ class SettingController extends Controller
      */
     public function index()
     {
-        dd('test 123');
+        @include('view.name');
     }
 
     /**
