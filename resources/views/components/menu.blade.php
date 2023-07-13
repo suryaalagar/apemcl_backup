@@ -21,6 +21,7 @@
           <li class=" nav-item"><a href="{{route('dashboard')}}" target="_blank"><i class="feather icon-home"></i><span class="menu-title" data-i18n="Dashboard">Dashboard</span></a>
           </li>
 
+
         </ul>
       </div>
     </div>
