@@ -15,13 +15,13 @@
             <div class="card border-grey border-lighten-3 m-0">
                 <div class="card-header border-0">
                     <div class="card-title text-center">
-                        <div class="p-1"><img src="{{('img/APEMC.png')}}" alt="branding logo"></div>
+                        <div class="p-1"><img src="{{asset('img/APEMC.png')}}" alt="logo"></div>
                     </div>
                 </div>
                 <div class="card-content">
                     <div class="card-body pt-0">
                         <form class="form-horizontal" action="{{ route('login') }}" method="post">
-                        @csrf 
+                        @csrf
                         <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }} <span style="color:crimson"> *</span></label>
                             <fieldset class="form-group position-relative has-icon-left">
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>

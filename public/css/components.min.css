@@ -86,7 +86,7 @@ html body.bg-full-screen-image {
 	background-size: cover
 }
 html body .pace .pace-progress {
-	background: #4ACACC
+	background: linear-gradient(to right, #07457a, #0575e7) !important;
 }
 html body.navbar-static .navbar-container,
 html body.navbar-sticky .navbar-container {
