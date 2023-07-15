@@ -13,7 +13,9 @@ class SettingController extends Controller
      */
     public function index()
     {
-        @include('view.name');
+        $setting = Setting ::first();
+        return view('setting.index',compact('setting'));
+        // return view('pages.eventPage',compact('event','pics'));
     }
 
     /**
@@ -53,7 +55,8 @@ class SettingController extends Controller
      */
     public function update(UpdateSettingRequest $request, Setting $setting)
     {
-        //
+        // $input = Setting::all();
+        dd('test');
     }
 
     /**
