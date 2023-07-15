@@ -55,8 +55,11 @@ class SettingController extends Controller
      */
     public function update(UpdateSettingRequest $request, Setting $setting)
     {
-        // $input = Setting::all();
-        dd('test');
+    //   dd($request->all());
+    $setting->name=$request->name;
+    $setting->email=$request->email;
+    $setting->save();
+    return back();
     }
 
     /**
