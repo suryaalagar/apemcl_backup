@@ -37,7 +37,12 @@
 
     <!-- BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="{{asset('assets/css/style.css')}}">
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/jquery.dataTables.css') }}"/>
     <!-- END: Custom CSS-->
+    <script type="text/javascript" src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>   
+
 
   </head>
   <!-- END: Head-->
@@ -54,5 +59,6 @@
         </div>
     </div>
 </div>
+
 @include('components.footer')
 
