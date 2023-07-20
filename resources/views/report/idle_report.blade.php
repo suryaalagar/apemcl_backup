@@ -39,7 +39,7 @@
                 <div class="row">
                     <div class="col-12 table-responsive">
                         <br />
-                        <h3 align="center">Trip Plan</h3>
+                        <h3 align="center">Idle Report</h3>
 
                         <br />
                         <table class="table table-striped table-bordered user_datatable">
@@ -49,29 +49,31 @@
                                     <th>vehicle_name</th>
                                     <th>start_location</th>
                                     <th>end_location</th>
-                                    <th>poc_number</th>
-                                    <th>route_name</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
+                                    <th>Duration</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
     
                             <tbody>
-                                @php
+                               @php
                                     $s_no = 1;
                                 @endphp
-                                @foreach ($trip_plans as $trip)
+                                @foreach ($idle_data as $idle)
                                     <tr>
                                         {{-- <td>{{ $trip->client_id }}</td> --}}
                                         {{-- <td>{{ $trip->vehicleid }}</td> --}}
                                         <td>{{ $s_no++ }}</td>
-                                        <td>{{ $trip->vehicle_name }}</td>
-                                        <td>{{ $trip->start_location }}</td>
-                                        <td>{{ $trip->end_location }}</td>
-                                        <td>{{ $trip->poc_number }}</td>
-                                        <td>{{ $trip->route_name }}</td>
+                                        <td>{{ $idle->vehiclename }}</td>
+                                        <td>{{ $idle->start_location }}</td>
+                                        <td>{{ $idle->end_location }}</td>
+                                        <td>{{ $idle->start_time }}</td>
+                                        <td>{{ $idle->end_time }}</td>
+                                        <td>{{ $idle->duration }}</td>
                                         <td>{{ "Completed"}}</td>
                                     </tr>
-                                @endforeach
+                                @endforeach 
                             </tbody>
                         </table>
                     </div>
@@ -167,50 +169,35 @@
 @endsection
 
 {{-- @push('scripts')
-    <script type="text/javascript">
-        // jQuery.noConflict();
-        $(document).ready(function() {
-            // alert("helloooo");
-            var table = $('.user_datatable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: "{{ route('tripplanreport.index') }}",
-                columns: [{
-                        data: 'client_id',
-                        name: 'client_id'
-                    },
-                    {
-                        data: 'vehicleid',
-                        name: 'vehicleid'
-                    },
-                    {
-                        data: 'vehicle_name',
-                        name: 'vehicle_name'
-                    },
-                    {
-                        data: 'start_location',
-                        name: 'start_location'
-                    },
-                    {
-                        data: 'end_location',
-                        name: 'end_location'
-                    },
-                    {
-                        data: 'poc_number',
-                        name: 'poc_number'
-                    },
-                    {
-                        data: 'route_name',
-                        name: 'route_name'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    },
-                ]
-            });
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+          var table = $('#user_datatable').DataTable({
+            alert("hooo");
+            dom: 'Bfrtip',
+            buttons: [
+             'csv', 'excel', 'pdf', 'print','colvis'
+        ],
+              processing: true,
+              serverSide: true,
+              ajax: "{{ route('idlereport.get_data') }}",
+              method:"GET",
+              headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+              columns: [
+                  {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                  {data: 'name', name: 'name'},
+                  {data: 'email', name: 'email'},
+                  {data: 'mobile', name: 'mobile'},
+              ]
+          });
         });
-    </script>
+</script>
 @endpush --}}

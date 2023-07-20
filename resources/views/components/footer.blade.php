@@ -6,9 +6,7 @@
         </span>
       </p>
     </footer>
-
     <!-- END: Footer-->
-
 
     <!-- BEGIN: Vendor JS-->
     <script src="{{asset('app-assets/vendors/js/vendors.min.js')}}"></script>

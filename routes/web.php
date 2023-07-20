@@ -4,6 +4,8 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ProfileController;
 // use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TripplanReportController;
+use App\Http\Controllers\IdleReportController;
+use App\Http\Controllers\ParkingReportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,11 +26,14 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class,'index'])->name('dashboard');
     Route::resource('/setting', SettingController::class);
-    Route::resource('/tripplanreport', TripplanReportController::class);
-    Route::get('/trip-data',[TripplanReportController::class, "getData"]);
+    // Route::get('/tripplanreport', TripplanReportController::class);
+    // Route::get('idlereport',[IdleReportController::class, 'index'])->name('idlereport.get_data');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('tripplanreport',[TripplanReportController::class,'index'])->name('tripplanreport.index');
+    Route::get('idlereport',[IdleReportController::class,'index'])->name('idlereport.index');
+    Route::get('parkingreport',[ParkingReportController::class,'index'])->name('parkingreport.index');
 });
 
 require __DIR__.'/auth.php';

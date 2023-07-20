@@ -39,7 +39,7 @@
                 <div class="row">
                     <div class="col-12 table-responsive">
                         <br />
-                        <h3 align="center">Trip Plan</h3>
+                        <h3 align="center">Parking Report</h3>
 
                         <br />
                         <table class="table table-striped table-bordered user_datatable">
@@ -59,16 +59,17 @@
                                 @php
                                     $s_no = 1;
                                 @endphp
-                                @foreach ($trip_plans as $trip)
+                                @foreach ($parking_data as $park)
                                     <tr>
                                         {{-- <td>{{ $trip->client_id }}</td> --}}
                                         {{-- <td>{{ $trip->vehicleid }}</td> --}}
                                         <td>{{ $s_no++ }}</td>
-                                        <td>{{ $trip->vehicle_name }}</td>
-                                        <td>{{ $trip->start_location }}</td>
-                                        <td>{{ $trip->end_location }}</td>
-                                        <td>{{ $trip->poc_number }}</td>
-                                        <td>{{ $trip->route_name }}</td>
+                                        <td>{{ $park->vehiclename }}</td>
+                                        <td>{{ $park->start_location }}</td>
+                                        <td>{{ $park->end_location }}</td>
+                                        <td>{{ $park->start_time }}</td>
+                                        <td>{{ $park->end_time }}</td>
+                                        <td>{{ $park->duration }}</td>
                                         <td>{{ "Completed"}}</td>
                                     </tr>
                                 @endforeach
