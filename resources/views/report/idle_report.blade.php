@@ -10,141 +10,101 @@
     <script type="text/javascript" src="{{ asset('js/jquery.dataTables.js') }}"></script>    
 </head> --}}
 @extends('layouts.app')
+@push('styles')
+    <style>
+        #map {
+            height: 100%;
+        }
+    </style>
+@endpush
 @section('content')
-
-    <body>
-        {{-- <div>
-        <h3>Trip Plan</h3>
-        <table id="datatable" class="display">
-            <thead>
-                <tr align="left">
-                    <th>ID</th>
-                    <th data-sortable="true">client_id</th>
-                    <th data-sortable="false">vehicleid</th>
-                    <th data-sortable="false">vehicle_name</th>
-                    <th data-sortable="false">start_location</th>
-                    <th data-sortable="false">end_location</th>
-                    <th data-sortable="false">poc_number</th>
-                    <th data-sortable="false">route_name</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div> --}}
-        <!-- jQuery library -->
-
-        <!-- DataTables plugin -->
-        <div class="card">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12 table-responsive">
-                        <br />
-                        <h3 align="center">Idle Report</h3>
-
-                        <br />
-                        <table class="table table-striped table-bordered user_datatable">
-                            <thead>
-                                <tr>
-                                    <th>S.No</th>
-                                    <th>vehicle_name</th>
-                                    <th>start_location</th>
-                                    <th>end_location</th>
-                                    <th>Start Time</th>
-                                    <th>End Time</th>
-                                    <th>Duration</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-    
-                            <tbody>
-                               @php
-                                    $s_no = 1;
-                                @endphp
-                                @foreach ($idle_data as $idle)
-                                    <tr>
-                                        {{-- <td>{{ $trip->client_id }}</td> --}}
-                                        {{-- <td>{{ $trip->vehicleid }}</td> --}}
-                                        <td>{{ $s_no++ }}</td>
-                                        <td>{{ $idle->vehiclename }}</td>
-                                        <td>{{ $idle->start_location }}</td>
-                                        <td>{{ $idle->end_location }}</td>
-                                        <td>{{ $idle->start_time }}</td>
-                                        <td>{{ $idle->end_time }}</td>
-                                        <td>{{ $idle->duration }}</td>
-                                        <td>{{ "Completed"}}</td>
-                                    </tr>
-                                @endforeach 
-                            </tbody>
-                        </table>
+    <section id="configuration">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
                     </div>
-                </div>
-    
-                <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form method="post" id="sample_form" class="form-horizontal">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="ModalLabel">Add New Record</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <span id="form_result"></span>
-                                    <div class="form-group">
-                                        <label>Name : </label>
-                                        <input type="text" name="name" id="name" class="form-control" />
+                    <div class="card-content collapse show">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card-body card-dashboard">
+
+                                    <div class="table-responsive">
+                                        <div class="col-12 table-responsive">
+                                            <br />
+                                            <h3 align="center">Idle Report</h3>
+
+                                            <br />
+                                            <table class="table table-striped table-bordered user_datatable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>S.No</th>
+                                                        <th>vehicle_name</th>
+                                                        <th>start_location</th>
+                                                        <th>end_location</th>
+                                                        <th>Start Time</th>
+                                                        <th>End Time</th>
+                                                        <th>Duration</th>
+                                                        <th>Map View</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    @php
+                                                        $s_no = 1;
+                                                    @endphp
+                                                    @foreach ($idle_data as $idle)
+                                                        <tr>
+                                                            <td>{{ $s_no++ }}</td>
+                                                            <td>{{ $idle->vehiclename }}</td>
+                                                            <td>{{ $idle->start_location }}</td>
+                                                            <td>{{ $idle->end_location }}</td>
+                                                            <td>{{ $idle->start_time }}</td>
+                                                            <td>{{ $idle->end_time }}</td>
+                                                            <td>{{ $idle->duration }}</td>
+                                                            <td><button class="btn btn-sm btn-success map_edit">MAP
+                                                                    VIEW</button></td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Email : </label>
-                                        <input type="email" name="email" id="email" class="form-control" />
-                                    </div>
-                                    <div class="form-group editpass">
-                                        <label>Password : </label>
-                                        <input type="password" name="password" id="password" class="form-control" />
-                                    </div>
-                                    <input type="hidden" name="action" id="action" value="Add" />
-                                    <input type="hidden" name="hidden_id" id="hidden_id" />
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <input type="submit" name="action_button" id="action_button" value="Add"
-                                        class="btn btn-info" />
-                                </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
+    </section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
                 </div>
-    
-                <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form method="post" id="sample_form" class="form-horizontal">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="ModalLabel">Confirmation</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <h4 align="center" style="margin:0;">Are you sure you want to remove this data?</h4>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" name="ok_button" id="ok_button" class="btn btn-danger">OK</button>
-                                </div>
-                            </form>
-                        </div>
+                <div class="card-body card-dashboard" style="height:600px !important;">
+                    <div id="map">
+
                     </div>
                 </div>
-    
             </div>
         </div>
-        
-        @push('scripts')
-            <script type="text/javascript" src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
-        @endpush
+    </div>
 
-    </body>
+    </div>
+    </div>
+
+    @push('scripts')
+        {{-- <script type="text/javascript" src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
+            {{-- <script src="{{ asset('assets/plugins/osm/leaflet.js') }}"></script> --}}
+        {{-- <script type="text/javascript" src="{{ asset('assets/plugins/osm/leaflet.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('assets/js/MovingMarker.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('assets/plugins/osm/leaflet.draw.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('assets/plugins/osm/Polyline.encoded.js') }}"></script> --}}
+        {{-- <link rel='stylesheet' href='https://unpkg.com/leaflet@1.8.0/dist/leaflet.css' crossorigin='' /> --}}
+        {{-- <script src='https://unpkg.com/leaflet@1.8.0/dist/leaflet.js' crossorigin=''></script>
+        <script src='https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.js'></script> --}}
+    @endpush
+
 
     {{-- <script>
     $(document).ready(function(){
@@ -168,36 +128,51 @@
 </script> --}}
 @endsection
 
-{{-- @push('scripts')
-<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
-<script type="text/javascript">
-    $(function () {
-          var table = $('#user_datatable').DataTable({
-            alert("hooo");
-            dom: 'Bfrtip',
-            buttons: [
-             'csv', 'excel', 'pdf', 'print','colvis'
-        ],
-              processing: true,
-              serverSide: true,
-              ajax: "{{ route('idlereport.get_data') }}",
-              method:"GET",
-              headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-              columns: [
-                  {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                  {data: 'name', name: 'name'},
-                  {data: 'email', name: 'email'},
-                  {data: 'mobile', name: 'mobile'},
-              ]
-          });
+@push('scripts')
+    {{-- <link rel="stylesheet" href="{{ 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css' }}" />
+    <script src="{{ 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js' }}"></script> --}}
+    <script type="text/javascript">
+        var map = L.map('map').setView([10.84125, 79.84266000000001], 6);
+        // create a new tile layer
+        var tileUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            layer = new L.TileLayer(tileUrl, {
+                attribution: 'Maps © <a href=\"www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors',
+                maxZoom: 20
+            });
+        // add the layer to the map
+        // Google Layer
+        var Google_layer = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
         });
-</script>
-@endpush --}}
+        map.addLayer(Google_layer);
+
+        $(".map_edit").click(function(e) {
+            e.preventDefault();
+            // alert("hello");
+            map.setZoom(10);
+            var mark_img = "{{ 'assets/dist/img/icon/marker_loc.png' }}";
+
+            // var marker_content = array[12];
+
+            var redIcon = new L.Icon({
+                iconUrl: mark_img
+            });
+
+            var s_lat = 17.538310;
+            var s_lng = 79.210775;
+            var startCoords = [s_lat, s_lng];
+            console.log(startCoords);
+
+            StartMarker1 = L.marker(startCoords, {
+                icon: redIcon
+            }).addTo(map);
+
+            var group = new L.featureGroup([StartMarker1]);
+
+            map.fitBounds(group.getBounds());
+
+        });
+    </script>
+    </body>
+@endpush
