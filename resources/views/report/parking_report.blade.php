@@ -54,7 +54,7 @@
                                     <th>Status</th>
                                 </tr>
                             </thead>
-    
+
                             <tbody>
                                 @php
                                     $s_no = 1;
@@ -70,14 +70,14 @@
                                         <td>{{ $park->start_time }}</td>
                                         <td>{{ $park->end_time }}</td>
                                         <td>{{ $park->duration }}</td>
-                                        <td>{{ "Completed"}}</td>
+                                        <td>{{ 'Completed' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
                 </div>
-    
+
                 <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -113,7 +113,7 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -128,16 +128,17 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" name="ok_button" id="ok_button" class="btn btn-danger">OK</button>
+                                    <button type="button" name="ok_button" id="ok_button"
+                                        class="btn btn-danger">OK</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-    
+
             </div>
         </div>
-        
+
         @push('scripts')
             <script type="text/javascript" src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
             <script type="text/javascript" src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
