@@ -64,7 +64,11 @@
                                                             <td>{{ $park->start_time }}</td>
                                                             <td>{{ $park->end_time }}</td>
                                                             <td>{{ $park->duration }}</td>
-                                                            <td><button class="btn btn-sm btn-success map_edit">MAP VIEW</button></td>
+                                                            <td><button type="button" class="btn btn-success showModal"
+                                                                    data-toggle="modal" data-target="#myModal"
+                                                                    data-lat='17.538310' data-lng='79.210775'>
+                                                                    Map View
+                                                                </button></td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
@@ -76,34 +80,55 @@
                         </div>
                     </div>
     </section>
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                </div>
-                <div class="card-body card-dashboard" style="height:600px !important;">
-                    <div id="map">
 
+    </div>
+    </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Parking Report</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body modal_offset">
+                    <div class="row">
+                        <div class="col-md-12 modal_body_content">
+                            <p>Location : Karnataka</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 modal_body_map">
+                            <div class="map" id="map">
+                                <div style="width: 100px; height: 400px;" id="map_canvas"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 modal_body_end">
+                            <p>APEMCL</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    </div>
     </div>
 @endsection
 
 @push('scripts')
     {{-- <link rel="stylesheet" href="{{ 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css' }}" />
     <script src="{{ 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js' }}"></script> --}}
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script> --}}
+    {{-- <script src="script.js"></script> --}}
     <script type="text/javascript">
         var map = L.map('map').setView([10.84125, 79.84266000000001], 6);
         // create a new tile layer
         var tileUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             layer = new L.TileLayer(tileUrl, {
                 attribution: 'Maps © <a href=\"www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors',
-                maxZoom: 20
+                maxZoom: 20,
+                noWrap: true,
             });
         // add the layer to the map
         // Google Layer
@@ -112,33 +137,46 @@
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
         });
         map.addLayer(Google_layer);
+        $('.showModal').on('click', function() {
+            // console.log(lat);
+            var lat = $(this).data('lat');
+            var lng = $(this).data('lng');
+            setTimeout(function() {
+                map.invalidateSize();
 
-        $(".map_edit").click(function(e) {
-            e.preventDefault();
-            // alert("hello");
-            map.setZoom(10);
+                showMap(lat, lng);
+            }, 200);
+        });
+
+        function showMap(lat, lng) {
+
+
             var mark_img = "{{ 'assets/dist/img/icon/marker_loc.png' }}";
-
-            // var marker_content = array[12];
 
             var redIcon = new L.Icon({
                 iconUrl: mark_img
             });
-
-            var s_lat = 17.538310;
-            var s_lng = 79.210775;
-            var startCoords = [s_lat, s_lng];
+            // var s_lat = 17.538310;
+            // var s_lng = 79.210775;
+            var startCoords = [lat, lng];
             console.log(startCoords);
 
             StartMarker1 = L.marker(startCoords, {
                 icon: redIcon
             }).addTo(map);
-
+            // map.setZoom(10);
+            // console.log(map.getZoom());
+            // map.setMinZoom(map.getZoom());            
             var group = new L.featureGroup([StartMarker1]);
 
             map.fitBounds(group.getBounds());
-
-        });
+            // var popup = L.popup()
+            //     .setContent("I am a standalone popup.");
+            StartMarker1.bindPopup("hello").openPopup();
+            // StartMarker1.bindPopup().openPopup();
+            map.setView(startCoords, 12);
+        }
     </script>
+
     </body>
 @endpush
