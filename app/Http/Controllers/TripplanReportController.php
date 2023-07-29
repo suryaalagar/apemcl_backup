@@ -46,7 +46,7 @@ class TripplanReportController extends Controller
         $columnIndex         =         $orderArray[0]['column'];  // This will let us know,
         // which column index should be sorted 
         // 0 = id, 1 = name, 2 = email , 3 = created_at
-
+         
         $columnName         =         $columnNameArray[$columnIndex]['data']; // Here we will get column name, 
         // Base on the index we get
 

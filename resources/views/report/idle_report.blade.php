@@ -62,8 +62,11 @@
                                                             <td>{{ $idle->start_time }}</td>
                                                             <td>{{ $idle->end_time }}</td>
                                                             <td>{{ $idle->duration }}</td>
-                                                            <td><button class="btn btn-sm btn-success map_edit">MAP
-                                                                    VIEW</button></td>
+                                                            <td><button type="button" class="btn btn-success showModal"
+                                                                    data-toggle="modal" data-target="#myModal"
+                                                                    data-lat='17.538310' data-lng='79.210775'>
+                                                                    Map View
+                                                                </button></td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
@@ -75,7 +78,7 @@
                         </div>
                     </div>
     </section>
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
@@ -87,23 +90,41 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     </div>
     </div>
-
-    @push('scripts')
-        {{-- <script type="text/javascript" src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
-            {{-- <script src="{{ asset('assets/plugins/osm/leaflet.js') }}"></script> --}}
-        {{-- <script type="text/javascript" src="{{ asset('assets/plugins/osm/leaflet.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('assets/js/MovingMarker.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('assets/plugins/osm/leaflet.draw.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('assets/plugins/osm/Polyline.encoded.js') }}"></script> --}}
-        {{-- <link rel='stylesheet' href='https://unpkg.com/leaflet@1.8.0/dist/leaflet.css' crossorigin='' /> --}}
-        {{-- <script src='https://unpkg.com/leaflet@1.8.0/dist/leaflet.js' crossorigin=''></script>
-        <script src='https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.js'></script> --}}
-    @endpush
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Idle Report</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body modal_offset">
+                    <div class="row">
+                        <div class="col-md-12 modal_body_content">
+                            <p>Location : Karnataka</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 modal_body_map">
+                            <div class="map" id="map">
+                                <div style="width: 100px; height: 400px;" id="map_canvas"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 modal_body_end">
+                            <p>APEMCL</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     {{-- <script>
@@ -131,13 +152,16 @@
 @push('scripts')
     {{-- <link rel="stylesheet" href="{{ 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css' }}" />
     <script src="{{ 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js' }}"></script> --}}
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script> --}}
+    {{-- <script src="script.js"></script> --}}
     <script type="text/javascript">
         var map = L.map('map').setView([10.84125, 79.84266000000001], 6);
         // create a new tile layer
         var tileUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             layer = new L.TileLayer(tileUrl, {
                 attribution: 'Maps © <a href=\"www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors',
-                maxZoom: 20
+                maxZoom: 20,
+                noWrap: true,
             });
         // add the layer to the map
         // Google Layer
@@ -146,22 +170,31 @@
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
         });
         map.addLayer(Google_layer);
+        $('.showModal').on('click', function() {
+            // console.log(lat);
 
-        $(".map_edit").click(function(e) {
-            e.preventDefault();
-            // alert("hello");
-            map.setZoom(10);
+            
+            var lat = $(this).data('lat');
+            var lng = $(this).data('lng');
+            // alert(lat.+.lng);
+            setTimeout(function() {
+            map.invalidateSize();
+            showMap(lat, lng);
+            }, 10);
+        });
+
+        function showMap(lat, lng) {
+
+            // map.setZoom(10);
             var mark_img = "{{ 'assets/dist/img/icon/marker_loc.png' }}";
-
-            // var marker_content = array[12];
 
             var redIcon = new L.Icon({
                 iconUrl: mark_img
             });
 
-            var s_lat = 17.538310;
-            var s_lng = 79.210775;
-            var startCoords = [s_lat, s_lng];
+            // var s_lat = 17.538310;
+            // var s_lng = 79.210775;
+            var startCoords = [lat, lng];
             console.log(startCoords);
 
             StartMarker1 = L.marker(startCoords, {
@@ -171,8 +204,8 @@
             var group = new L.featureGroup([StartMarker1]);
 
             map.fitBounds(group.getBounds());
-
-        });
+        }
     </script>
+
     </body>
 @endpush
