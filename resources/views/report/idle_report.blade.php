@@ -78,19 +78,6 @@
                         </div>
                     </div>
     </section>
-    {{-- <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                </div>
-                <div class="card-body card-dashboard" style="height:600px !important;">
-                    <div id="map">
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
 
     </div>
     </div>
@@ -172,26 +159,23 @@
         map.addLayer(Google_layer);
         $('.showModal').on('click', function() {
             // console.log(lat);
-
-            
             var lat = $(this).data('lat');
             var lng = $(this).data('lng');
-            // alert(lat.+.lng);
             setTimeout(function() {
-            map.invalidateSize();
-            showMap(lat, lng);
-            }, 10);
+                map.invalidateSize();
+
+                showMap(lat, lng);
+            }, 200);
         });
 
         function showMap(lat, lng) {
 
-            // map.setZoom(10);
+
             var mark_img = "{{ 'assets/dist/img/icon/marker_loc.png' }}";
 
             var redIcon = new L.Icon({
                 iconUrl: mark_img
             });
-
             // var s_lat = 17.538310;
             // var s_lng = 79.210775;
             var startCoords = [lat, lng];
@@ -200,10 +184,17 @@
             StartMarker1 = L.marker(startCoords, {
                 icon: redIcon
             }).addTo(map);
-
+            // map.setZoom(10);
+            // console.log(map.getZoom());
+            // map.setMinZoom(map.getZoom());            
             var group = new L.featureGroup([StartMarker1]);
 
             map.fitBounds(group.getBounds());
+            // var popup = L.popup()
+            //     .setContent("I am a standalone popup.");
+            StartMarker1.bindPopup("hello").openPopup();
+            // StartMarker1.bindPopup().openPopup();
+            map.setView(startCoords, 12);
         }
     </script>
 
