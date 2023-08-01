@@ -13,27 +13,6 @@
 @section('content')
 
     <body>
-        {{-- <div>
-        <h3>Trip Plan</h3>
-        <table id="datatable" class="display">
-            <thead>
-                <tr align="left">
-                    <th>ID</th>
-                    <th data-sortable="true">client_id</th>
-                    <th data-sortable="false">vehicleid</th>
-                    <th data-sortable="false">vehicle_name</th>
-                    <th data-sortable="false">start_location</th>
-                    <th data-sortable="false">end_location</th>
-                    <th data-sortable="false">poc_number</th>
-                    <th data-sortable="false">route_name</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div> --}}
-        <!-- jQuery library -->
-
-        <!-- DataTables plugin -->
         <div class="card">
             <div class="container">
                 <div class="row">

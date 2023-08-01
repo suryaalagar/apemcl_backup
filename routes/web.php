@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TripplanReportController;
 use App\Http\Controllers\IdleReportController;
 use App\Http\Controllers\ParkingReportController;
+use App\Http\Controllers\RoutedeviationReportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::get('tripplanreport',[TripplanReportController::class,'index'])->name('tripplanreport.index');
     Route::get('idlereport',[IdleReportController::class,'index'])->name('idlereport.index');
     Route::get('parkingreport',[ParkingReportController::class,'index'])->name('parkingreport.index');
+    Route::get('routedeviationreport',[RoutedeviationReportController::class,'index'])->name('routedeviationreport.index');
 });
 
 require __DIR__.'/auth.php';

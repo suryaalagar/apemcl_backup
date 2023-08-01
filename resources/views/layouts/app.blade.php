@@ -75,5 +75,7 @@
     @include('components.footer')
     <script src='https://unpkg.com/leaflet@1.8.0/dist/leaflet.js' crossorigin=''></script>
     <script src='https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.js'></script>
+    <script src="{{ asset('assets/js/Polyline.encoded.js')}}"></script>
+    
     @stack('scripts')
 </body>

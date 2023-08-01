@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             IdleReportSeeder::class,
             ParkingReportSeeder::class,
+            RoutedeviationReportSeeder::class,
         ]);
     }
 }

@@ -46,6 +46,12 @@
                                     data-i18n="parking_report">Parking</span></a>
                         </li>
                     </ul>
+                    <ul class="menu-content">
+                        <li class=" nav-item"><a href="{{ route('routedeviationreport.index') }}" target="_blank"><i
+                                    class="feather icon-car"></i><span class="menu-title"
+                                    data-i18n="routedeviation_report">Route Deviation</span></a>
+                        </li>
+                    </ul>
                 </li>
                 <li class=" nav-item"><a href="{{ route('setting.index') }}" target="_blank"><i
                             class="feather icon-settings"></i><span class="menu-title"

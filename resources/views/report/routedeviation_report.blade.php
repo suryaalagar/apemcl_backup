@@ -1,22 +1,4 @@
-{{-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Dattable Example by PHP TECH LIFE</title>
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.dataTables.css') }}"/>
-    <script type="text/javascript" src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/jquery.dataTables.js') }}"></script>    
-</head> --}}
 @extends('layouts.app')
-@push('styles')
-    <style>
-        #map {
-            height: 100%;
-        }
-    </style>
-@endpush
 @section('content')
     <section id="configuration">
         <div class="row">
@@ -32,7 +14,7 @@
                                     <div class="table-responsive">
                                         <div class="col-12 table-responsive">
                                             <br />
-                                            <h3 align="center">Idle Report</h3>
+                                            <h3 align="center">Parking Report</h3>
 
                                             <br />
                                             <table class="table table-striped table-bordered user_datatable">
@@ -40,11 +22,11 @@
                                                     <tr>
                                                         <th>S.No</th>
                                                         <th>vehicle_name</th>
-                                                        <th>start_location</th>
-                                                        <th>end_location</th>
-                                                        <th>Start Time</th>
-                                                        <th>End Time</th>
-                                                        <th>Duration</th>
+                                                        <th>Route Name</th>
+                                                        <th>Route Deviate Out Time</th>
+                                                        <th>Route Deviate Out Location</th>
+                                                        <th>Route Deviate In Time</th>
+                                                        <th>Route Deviate In Location</th>
                                                         <th>Map View</th>
                                                     </tr>
                                                 </thead>
@@ -53,18 +35,21 @@
                                                     @php
                                                         $s_no = 1;
                                                     @endphp
-                                                    @foreach ($idle_data as $idle)
+                                                    @foreach ($routedeviation_data as $route_deviate)
                                                         <tr>
+                                                            {{-- <td>{{ $trip->client_id }}</td> --}}
+                                                            {{-- <td>{{ $trip->vehicleid }}</td> --}}
                                                             <td>{{ $s_no++ }}</td>
-                                                            <td>{{ $idle->vehiclename }}</td>
-                                                            <td>{{ $idle->start_location }}</td>
-                                                            <td>{{ $idle->end_location }}</td>
-                                                            <td>{{ $idle->start_time }}</td>
-                                                            <td>{{ $idle->end_time }}</td>
-                                                            <td>{{ $idle->duration }}</td>
+                                                            <td>{{ $route_deviate->vehicle_name }}</td>
+                                                            <td>{{ $route_deviate->route_name }}</td>
+                                                            <td>{{ $route_deviate->route_deviate_outtime }}</td>
+                                                            <td>{{ $route_deviate->route_out_location }}</td>
+                                                            <td>{{ $route_deviate->route_deviate_intime }}</td>
+                                                            <td>{{ $route_deviate->route_in_location }}</td>
                                                             <td><button type="button" class="btn btn-success showModal"
                                                                     data-toggle="modal" data-target="#myModal"
-                                                                    data-lat='17.538310' data-lng='79.210775'>
+                                                                    data-planned_route='{{ $polyline_data->planned_route }}'
+                                                                    data-actual_running='{{ $polyline_data->actual_running }}'>
                                                                     Map View
                                                                 </button></td>
                                                         </tr>
@@ -78,19 +63,20 @@
                         </div>
                     </div>
     </section>
-    <!-- Modal -->
+
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">Idle Report</h4>
+                    <h4 class="modal-title" id="myModalLabel">Route Deviation Report</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body modal_offset">
                     <div class="row">
                         <div class="col-md-12 modal_body_content">
-                            <p>Location : Karnataka</p>
+                            <p><b>Route Out Location : Trichy Main Road</b></p>
+                            <p><b>Route In Location  : Thogaimalai Junction Road</b></p>
                         </div>
                     </div>
                     <div class="row">
@@ -109,28 +95,6 @@
             </div>
         </div>
     </div>
-
-
-{{-- <script>
-    $(document).ready(function(){
-        // alert("hello");
-        $('#datatable').DataTable({
-            processing: true,
-            serverSide: true,
-            order: [[ 0, "desc" ]],
-            ajax: "{{ url('trip-data') }}",
-            columns: [
-                { data: 'client_id' },
-                { data: 'vehicleid' },
-                { data: 'vehicle_name' },
-                { data: 'start_location' },
-                { data: 'end_location' },
-                { data: 'poc_number' },
-                { data: 'route_name' }
-            ]
-        });
-    });
-</script> --}}
 @endsection
 
 @push('scripts')
@@ -155,39 +119,41 @@
         });
         map.addLayer(Google_layer);
         $('.showModal').on('click', function() {
-            var lat = $(this).data('lat');
-            var lng = $(this).data('lng');
+            // console.log(lat);
+            var planned_route = $(this).data('planned_route');
+            var actual_running = $(this).data('actual_running');
             setTimeout(function() {
                 map.invalidateSize();
-                showMap(lat, lng);
+
+                showMap(planned_route, actual_running);
             }, 200);
         });
 
-        function showMap(lat, lng) {
+        function showMap(planned_route, actual_running) {
 
-            var mark_img = "{{ 'assets/dist/img/icon/marker_loc.png' }}";
 
-            var redIcon = new L.Icon({
-                iconUrl: mark_img
-            });
-
-            var startCoords = [lat, lng];
-            console.log(startCoords);
-
-            StartMarker1 = L.marker(startCoords, {
-                icon: redIcon
+            var planned_polyline = L.Polyline.fromEncoded(planned_route, {
+                weight: 3,
+                color: '#008000'
             }).addTo(map);
-            // map.setZoom(10);
-            // console.log(map.getZoom());
-            // map.setMinZoom(map.getZoom());            
-            var group = new L.featureGroup([StartMarker1]);
+            var running_polyline = L.Polyline.fromEncoded(actual_running, {
+                weight: 3,
+                color: '#FF0000'
+            }).addTo(map);
 
-            map.fitBounds(group.getBounds());
-            // var popup = L.popup()
-            //     .setContent("I am a standalone popup.");
-            StartMarker1.bindPopup("hello").openPopup();
+            // var polygon = L.Polygon.fromEncoded(planned_route, {
+            //     weight: 1,
+            //     color: '#f30'
+            // }).addTo(map);
+
+            // var polygon = L.Polygon.fromEncoded(running_polyline, {
+            //     weight: 1,
+            //     color: '#FF0000'
+            // }).addTo(map);
+
+            map.fitBounds(planned_polyline.getBounds());
             // StartMarker1.bindPopup().openPopup();
-            map.setView(startCoords, 12);
+            // map.setView(startCoords, 12);
         }
     </script>
 
