@@ -7,6 +7,7 @@ use App\Http\Controllers\TripplanReportController;
 use App\Http\Controllers\IdleReportController;
 use App\Http\Controllers\ParkingReportController;
 use App\Http\Controllers\RoutedeviationReportController;
+use App\Http\Controllers\KeyoffKeyonReportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::get('idlereport',[IdleReportController::class,'index'])->name('idlereport.index');
     Route::get('parkingreport',[ParkingReportController::class,'index'])->name('parkingreport.index');
     Route::get('routedeviationreport',[RoutedeviationReportController::class,'index'])->name('routedeviationreport.index');
+    Route::get('keyonkeyoffreport',[KeyoffKeyonReportController::class,'index'])->name('keyonkeyoffreport.index');
 });
 
 require __DIR__.'/auth.php';

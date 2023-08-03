@@ -52,6 +52,12 @@
                                     data-i18n="routedeviation_report">Route Deviation</span></a>
                         </li>
                     </ul>
+                    <ul class="menu-content">
+                        <li class=" nav-item"><a href="{{ route('keyonkeyoffreport.index') }}" target="_blank"><i
+                                    class="feather icon-car"></i><span class="menu-title"
+                                    data-i18n="keyonkeyoff_report">Key on Key off</span></a>
+                        </li>
+                    </ul>
                 </li>
                 <li class=" nav-item"><a href="{{ route('setting.index') }}" target="_blank"><i
                             class="feather icon-settings"></i><span class="menu-title"
