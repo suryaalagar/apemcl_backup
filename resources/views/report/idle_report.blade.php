@@ -111,7 +111,7 @@
     </div>
 
 
-{{-- <script>
+    {{-- <script>
     $(document).ready(function(){
         // alert("hello");
         $('#datatable').DataTable({

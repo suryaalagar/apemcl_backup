@@ -25,13 +25,13 @@
                             class="feather icon-home"></i><span class="menu-title"
                             data-i18n="Dashboard">Dashboard</span></a>
                 </li>
-                <li class=" nav-item"><a href="index-2.html"><i class="feather icon-home"></i><span class="menu-title"
+                <li class=" nav-item"><a href="index-2.html"><i class="feather icon-folder"></i><span class="menu-title"
                             data-i18n="Dashboard">Reports</span><span
                             class="badge badge badge-primary badge-pill float-right mr-2">3</span></a>
                     <ul class="menu-content">
                         <li class=" nav-item"><a href="{{ route('tripplanreport.index') }}" target="_blank"><i
-                                    class="feather icon-car"></i><span class="menu-title"
-                                    data-i18n="Trip_plan">Trip Plan</span></a>
+                                    class="feather icon-car"></i><span class="menu-title" data-i18n="Trip_plan">Trip
+                                    Plan</span></a>
                         </li>
                     </ul>
                     <ul class="menu-content">
@@ -43,7 +43,7 @@
                     <ul class="menu-content">
                         <li class=" nav-item"><a href="{{ route('parkingreport.index') }}" target="_blank"><i
                                     class="feather icon-car"></i><span class="menu-title"
-                                    data-i18n="parking_report">Parking</span></a>
+                                    data-i18n="parking_report">Stoppage</span></a>
                         </li>
                     </ul>
                     <ul class="menu-content">
@@ -56,6 +56,20 @@
                         <li class=" nav-item"><a href="{{ route('keyonkeyoffreport.index') }}" target="_blank"><i
                                     class="feather icon-car"></i><span class="menu-title"
                                     data-i18n="keyonkeyoff_report">Key on Key off</span></a>
+                        </li>
+                    </ul>
+                    <ul class="menu-content">
+                        <li class=" nav-item"><a href="{{ route('playbackhistoryreport.index') }}" target="_blank"><i
+                                    class="feather icon-car"></i><span class="menu-title"
+                                    data-i18n="keyonkeyoff_report">Playback History</span></a>
+                        </li>
+                    </ul>
+                </li>
+                <li class=" nav-item"><a href="index-2.html"><i class="feather icon-map"></i><span class="menu-title"
+                            data-i18n="Dashboard">Planned Trips</span></a>
+                    <ul class="menu-content">
+                        <li class=" nav-item"><a href="{{ route('tripplanreport.index') }}" target="_blank"><i
+                                    class="feather icon-car"></i><span class="menu-title" data-i18n="Trip_plan">Trips</span></a>
                         </li>
                     </ul>
                 </li>

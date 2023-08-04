@@ -13,183 +13,215 @@
 @section('content')
 
     <body>
-        <div class="card">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12 table-responsive">
-                        <br />
-                        <h3 align="center">Trip Plan</h3>
-
-                        <br />
-                        <table class="table table-striped table-bordered user_datatable">
-                            <thead>
-                                <tr>
-                                    <th>S.No</th>
-                                    <th>vehicle_name</th>
-                                    <th>start_location</th>
-                                    <th>end_location</th>
-                                    <th>poc_number</th>
-                                    <th>route_name</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-    
-                            <tbody>
-                                @php
-                                    $s_no = 1;
-                                @endphp
-                                @foreach ($trip_plans as $trip)
-                                    <tr>
-                                        {{-- <td>{{ $trip->client_id }}</td> --}}
-                                        {{-- <td>{{ $trip->vehicleid }}</td> --}}
-                                        <td>{{ $s_no++ }}</td>
-                                        <td>{{ $trip->vehicle_name }}</td>
-                                        <td>{{ $trip->start_location }}</td>
-                                        <td>{{ $trip->end_location }}</td>
-                                        <td>{{ $trip->poc_number }}</td>
-                                        <td>{{ $trip->route_name }}</td>
-                                        <td>{{ "Completed"}}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+        <div class="card-body">
+            <ul class="nav nav-tabs nav-underline" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="baseIcon-tab21" data-toggle="tab" aria-controls="tabIcon21" href="#tabIcon21"
+                        role="tab" aria-selected="true"><i class="fa fa-play"></i>All</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="baseIcon-tab24" data-toggle="tab" aria-controls="tabIcon24" href="#tabIcon24"
+                        role="tab" aria-selected="false"><i class="fa fa-flag"></i>In HUB</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="baseIcon-tab22" data-toggle="tab" aria-controls="tabIcon22" href="#tabIcon22"
+                        role="tab" aria-selected="false"><i class="fa fa-flag"></i>Trip Processing</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="baseIcon-tab23" data-toggle="tab" aria-controls="tabIcon23" href="#tabIcon23"
+                        role="tab" aria-selected="false"><i class="fa fa-cog"></i>Trip Completed</a>
+                </li>
+            </ul>
+            <div class="card">
+                <div class="card-header">
                 </div>
-    
-                <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form method="post" id="sample_form" class="form-horizontal">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="ModalLabel">Add New Record</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <span id="form_result"></span>
-                                    <div class="form-group">
-                                        <label>Name : </label>
-                                        <input type="text" name="name" id="name" class="form-control" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Email : </label>
-                                        <input type="email" name="email" id="email" class="form-control" />
-                                    </div>
-                                    <div class="form-group editpass">
-                                        <label>Password : </label>
-                                        <input type="password" name="password" id="password" class="form-control" />
-                                    </div>
-                                    <input type="hidden" name="action" id="action" value="Add" />
-                                    <input type="hidden" name="hidden_id" id="hidden_id" />
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <input type="submit" name="action_button" id="action_button" value="Add"
-                                        class="btn btn-info" />
-                                </div>
-                            </form>
+                <div class="tab-content px-1 pt-1">
+                    <div class="tab-pane active" id="tabIcon21" role="tabpanel" aria-labelledby="baseIcon-tab21">
+                        <div class="card-content collapse show">
+                            <div class="card-body card-dashboard">
+                                <table class="table table-striped table-bordered" id="alltrips">
+                                    <thead class="bg-primary">
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Trip id</th>
+                                            <th>POC Number</th>
+                                            <th>IMEI/ SIM</th>
+                                            <th>TripDate</th>
+                                            <th>Vehicle Name</th>
+                                            <th>Route Name</th>
+                                            <th>Last Updatetime</th>
+                                            <th>Vehicle Status</th>
+                                            <th>On duration</th>
+                                            <th>Start Location</th>
+                                            <th>End location</th>
+                                            <th>Trip Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="ln_solid"></div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tabIcon24" role="tabpanel" aria-labelledby="baseIcon-tab24">
+                        <div class="card-content collapse show">
+                            <div class="card-body card-dashboard">
+                                <table class="table table-striped table-bordered" id="inhubtrips">
+                                    <thead class="bg-primary">
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Trip id</th>
+                                            <th>POC Number</th>
+                                            <th>IMEI/SIM</th>
+                                            <th>TripDate</th>
+                                            <th>Vehicle Name</th>
+                                            <th>Route Name</th>
+                                            <th>Last Updatetime</th>
+                                            <th>Vehicle Status</th>
+                                            <th>On duration</th>
+                                            <th>Start Location</th>
+                                            <th>End location</th>
+                                            <th>Trip Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="ln_solid"></div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tabIcon22" role="tabpanel" aria-labelledby="baseIcon-tab22">
+                        <div class="card-content collapse show">
+                            <div class="card-body card-dashboard">
+                                <table class="table table-striped table-bordered" id="processtrips">
+                                    <thead class="bg-primary">
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Trip id</th>
+                                            <th>POC Number</th>
+                                            <th>IMEI/SIM</th>
+                                            <th>TripDate</th>
+                                            <th>Vehicle Name</th>
+                                            <th>Route Name</th>
+                                            <th>Last Updatetime</th>
+                                            <th>Vehicle Status</th>
+                                            <th>On duration</th>
+                                            <th>Start Location</th>
+                                            <th>End location</th>
+                                            <th>Trip Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="ln_solid"></div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tabIcon23" role="tabpanel" aria-labelledby="baseIcon-tab23">
+                        <div class="card-content collapse show">
+                            <div class="card-body card-dashboard">
+                                <table class="table table-striped table-bordered" id="completetrips">
+                                    <thead class="bg-primary">
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Trip id</th>
+                                            <th>POC Number</th>
+                                            <th>Device IMEI</th>
+                                            <th>TripDate</th>
+                                            <th>Vehicle Name</th>
+                                            <th>Route Name</th>
+                                            <th>Last Updatetime</th>
+                                            <th>Vehicle Status</th>
+                                            <th>On duration</th>
+                                            <th>Start Location</th>
+                                            <th>End location</th>
+                                            <th>Trip Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="ln_solid"></div>
                         </div>
                     </div>
                 </div>
-    
-                <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form method="post" id="sample_form" class="form-horizontal">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="ModalLabel">Confirmation</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <h4 align="center" style="margin:0;">Are you sure you want to remove this data?</h4>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" name="ok_button" id="ok_button" class="btn btn-danger">OK</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-    
             </div>
         </div>
-        
+        </div>
+        </div>
+
+
         @push('scripts')
             <script type="text/javascript" src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
             <script type="text/javascript" src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
         @endpush
 
     </body>
-
-    {{-- <script>
-    $(document).ready(function(){
-        // alert("hello");
-        $('#datatable').DataTable({
-            processing: true,
-            serverSide: true,
-            order: [[ 0, "desc" ]],
-            ajax: "{{ url('trip-data') }}",
-            columns: [
-                { data: 'client_id' },
-                { data: 'vehicleid' },
-                { data: 'vehicle_name' },
-                { data: 'start_location' },
-                { data: 'end_location' },
-                { data: 'poc_number' },
-                { data: 'route_name' }
-            ]
-        });
-    });
-</script> --}}
 @endsection
 
-{{-- @push('scripts')
+@push('scripts')
     <script type="text/javascript">
         // jQuery.noConflict();
         $(document).ready(function() {
             // alert("helloooo");
-            var table = $('.user_datatable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: "{{ route('tripplanreport.index') }}",
-                columns: [{
-                        data: 'client_id',
-                        name: 'client_id'
-                    },
-                    {
-                        data: 'vehicleid',
-                        name: 'vehicleid'
-                    },
-                    {
-                        data: 'vehicle_name',
-                        name: 'vehicle_name'
-                    },
-                    {
-                        data: 'start_location',
-                        name: 'start_location'
-                    },
-                    {
-                        data: 'end_location',
-                        name: 'end_location'
-                    },
-                    {
-                        data: 'poc_number',
-                        name: 'poc_number'
-                    },
-                    {
-                        data: 'route_name',
-                        name: 'route_name'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    },
+            // var table = $('.user_datatable').DataTable({
+            //     processing: true,
+            //     serverSide: true,
+            //     ajax: "{{ route('tripplanreport.index') }}",
+            //     columns: [{
+            //             data: 'client_id',
+            //             name: 'client_id'
+            //         },
+            //         {
+            //             data: 'vehicleid',
+            //             name: 'vehicleid'
+            //         },
+            //         {
+            //             data: 'vehicle_name',
+            //             name: 'vehicle_name'
+            //         },
+            //         {
+            //             data: 'start_location',
+            //             name: 'start_location'
+            //         },
+            //         {
+            //             data: 'end_location',
+            //             name: 'end_location'
+            //         },
+            //         {
+            //             data: 'poc_number',
+            //             name: 'poc_number'
+            //         },
+            //         {
+            //             data: 'route_name',
+            //             name: 'route_name'
+            //         },
+            //         {
+            //             data: 'action',
+            //             name: 'action',
+            //             orderable: false,
+            //             searchable: false
+            //         },
+            //     ]
+            // });
+        });
+
+        $(function() {
+            $("#alltrips,#inhubtrips,#completetrips,#processtrips").dataTable({
+                scrollX: true,
+                dom: 'Bfrtip',
+                buttons: [
+                    'excel'
                 ]
             });
-        });
+        })
     </script>
-@endpush --}}
+@endpush

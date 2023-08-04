@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('play_back_history', function (Blueprint $table) {
+        Schema::create('play_back_history_reports', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('running_no')->nullable();
             $table->double('lat_message')->nullable();
@@ -37,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('play_back_history');
+        Schema::dropIfExists('play_back_history_reports');
     }
 };

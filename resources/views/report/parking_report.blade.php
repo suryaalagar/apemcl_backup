@@ -32,10 +32,10 @@
                                     <div class="table-responsive">
                                         <div class="col-12 table-responsive">
                                             <br />
-                                            <h3 align="center">Parking Report</h3>
+                                            <h3 align="center">Stoppage Report</h3>
 
                                             <br />
-                                            <table class="table table-striped table-bordered user_datatable">
+                                            <table class="table table-striped table-bordered" id="datatable">
                                                 <thead>
                                                     <tr>
                                                         <th>S.No</th>
@@ -55,8 +55,8 @@
                                                     @endphp
                                                     @foreach ($parking_data as $park)
                                                         <tr>
-                                                            {{-- <td>{{ $trip->client_id }}</td> --}}
-                                                            {{-- <td>{{ $trip->vehicleid }}</td> --}}
+                                                            {{-- <td>{{ $trip->client_id }}</td> 
+                                                            <td>{{ $trip->vehicleid }}</td>  --}}
                                                             <td>{{ $s_no++ }}</td>
                                                             <td>{{ $park->vehiclename }}</td>
                                                             <td>{{ $park->start_location }}</td>
@@ -116,12 +116,65 @@
     </div>
 @endsection
 
+{{-- @push('scripts')
+    <script>
+        $(document).ready(function() {
+
+            $('#datatable').DataTable({
+                // alert
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('parkingreport.getData') }}",
+                columns: [{
+                        data: 'id',
+                        name: 'id'
+                    },
+                    {
+                        data: 'vehiclename',
+                        name: 'vehiclename'
+                    },
+                    {
+                        data: 'start_location',
+                        name: 'start_location'
+                    },
+                    {
+                        data: 'end_location',
+                        name: 'end_location'
+                    },
+                    {
+                        data: 'start_time',
+                        name: 'start_time'
+                    },
+                    {
+                        data: 'end_time',
+                        name: 'end_time'
+                    },
+                    {
+                        data: 'duration',
+                        name: 'duration'
+                    },
+                    {
+                        data: 'created_at',
+                        name: 'created_at'
+                    }
+                    order: [
+                        [0, 'asc']
+                    ], // Default sorting by the first column (ID) in ascending order
+                    pageLength: 10 // Display 10 records per page
+                ]
+            });
+        });
+    </script>
+@endpush --}}
+{{-- @php
+echo"complete";die;
+@endphp --}}
 @push('scripts')
-    {{-- <link rel="stylesheet" href="{{ 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css' }}" />
-    <script src="{{ 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js' }}"></script> --}}
-    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script> --}}
-    {{-- <script src="script.js"></script> --}}
-    <script type="text/javascript">
+    <link rel="stylesheet" href="{{ 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css' }}" />
+    <script src="{{ 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js' }}"></script> 
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script> 
+ <script src="script.js"></script> 
+ <script type="text/javascript">
         var map = L.map('map').setView([10.84125, 79.84266000000001], 6);
         // create a new tile layer
         var tileUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -172,11 +225,11 @@
             map.fitBounds(group.getBounds());
             // var popup = L.popup()
             //     .setContent("I am a standalone popup.");
-            StartMarker1.bindPopup("hello").openPopup();
+            StartMarker1.bindPopup("Andra").openPopup();
             // StartMarker1.bindPopup().openPopup();
             map.setView(startCoords, 12);
         }
     </script>
 
-    </body>
-@endpush
+</body>
+ @endpush

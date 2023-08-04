@@ -8,6 +8,7 @@ use App\Http\Controllers\IdleReportController;
 use App\Http\Controllers\ParkingReportController;
 use App\Http\Controllers\RoutedeviationReportController;
 use App\Http\Controllers\KeyoffKeyonReportController;
+use App\Http\Controllers\PlayBackHistoryReportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,8 +37,10 @@ Route::middleware('auth')->group(function () {
     Route::get('tripplanreport',[TripplanReportController::class,'index'])->name('tripplanreport.index');
     Route::get('idlereport',[IdleReportController::class,'index'])->name('idlereport.index');
     Route::get('parkingreport',[ParkingReportController::class,'index'])->name('parkingreport.index');
+    // Route::get('parkingreport',[ParkingReportController::class,'getData'])->name('parkingreport.getData');
     Route::get('routedeviationreport',[RoutedeviationReportController::class,'index'])->name('routedeviationreport.index');
     Route::get('keyonkeyoffreport',[KeyoffKeyonReportController::class,'index'])->name('keyonkeyoffreport.index');
+    Route::get('playbackhistoryreport',[PlayBackHistoryReportController::class,'index'])->name('playbackhistoryreport.index');
 });
 
 require __DIR__.'/auth.php';
