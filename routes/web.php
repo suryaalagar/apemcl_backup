@@ -35,9 +35,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('tripplanreport',[TripplanReportController::class,'index'])->name('tripplanreport.index');
+    Route::get('trip_plan_cron',[TripplanReportController::class,'trip_plan'])->name('tripplanreport.trip_plan');
     Route::get('idlereport',[IdleReportController::class,'index'])->name('idlereport.index');
+    // Route::get('parkingreport',[ParkingReportController::class,'index'])->name('parkingreport.index');
     Route::get('parkingreport',[ParkingReportController::class,'index'])->name('parkingreport.index');
-    // Route::get('parkingreport',[ParkingReportController::class,'getData'])->name('parkingreport.getData');
+    Route::get('parkingreport_table',[ParkingReportController::class,'getData'])->name('parkingreport.getData');
     Route::get('routedeviationreport',[RoutedeviationReportController::class,'index'])->name('routedeviationreport.index');
     Route::get('keyonkeyoffreport',[KeyoffKeyonReportController::class,'index'])->name('keyonkeyoffreport.index');
     Route::get('playbackhistoryreport',[PlayBackHistoryReportController::class,'index'])->name('playbackhistoryreport.index');

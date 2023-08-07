@@ -59,12 +59,12 @@
                                                             <td>{{ $idle->vehiclename }}</td>
                                                             <td>{{ $idle->start_location }}</td>
                                                             <td>{{ $idle->end_location }}</td>
-                                                            <td>{{ $idle->start_time }}</td>
-                                                            <td>{{ $idle->end_time }}</td>
+                                                            <td>{{ $idle->start_day }}</td>
+                                                            <td>{{ $idle->end_day }}</td>
                                                             <td>{{ $idle->duration }}</td>
                                                             <td><button type="button" class="btn btn-success showModal"
                                                                     data-toggle="modal" data-target="#myModal"
-                                                                    data-lat='17.538310' data-lng='79.210775'>
+                                                                    data-lat='{{$idle->s_lat}}' data-lng='{{$idle->s_lng}}'>
                                                                     Map View
                                                                 </button></td>
                                                         </tr>

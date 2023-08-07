@@ -11,6 +11,7 @@
         content="sproutwings is real time gps tracking system in all over india .our products are personal tracker,asset tracker,vechicle tracker,personal tracker,fleet tracker etc..,">
     <meta name="keywords" content="">
     <meta name="author" content="TRACKING WINGS">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>Tracking Wings</title>
     <link rel="apple-touch-icon" href="{{ asset('app-assets/images/ico/apple-icon-120..png') }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('app-assets/images/ico/favicon..png') }}">
@@ -76,6 +77,9 @@
     <script src='{{ asset('assets/plugins/osm/leaflet.js') }}' crossorigin=''></script>
     <script src='{{ asset('assets/plugins/osm/geocoder.js') }}'></script>
     <script src="{{ asset('assets/js/Polyline.encoded.js') }}"></script>
+    <script src="{{ asset('assets/js/dataTables.dataTables.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.dataTables.js') }}"></script>
 
     @stack('scripts')
 </body>

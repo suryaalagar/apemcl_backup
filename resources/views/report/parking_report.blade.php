@@ -50,14 +50,14 @@
                                                 </thead>
 
                                                 <tbody>
-                                                    @php
+                                                    {{-- @php
                                                         $s_no = 1;
                                                     @endphp
                                                     @foreach ($parking_data as $park)
                                                         <tr>
                                                             {{-- <td>{{ $trip->client_id }}</td> 
                                                             <td>{{ $trip->vehicleid }}</td>  --}}
-                                                            <td>{{ $s_no++ }}</td>
+                                                            {{-- <td>{{ $s_no++ }}</td>
                                                             <td>{{ $park->vehiclename }}</td>
                                                             <td>{{ $park->start_location }}</td>
                                                             <td>{{ $park->end_location }}</td>
@@ -69,8 +69,8 @@
                                                                     data-lat='17.538310' data-lng='79.210775'>
                                                                     Map View
                                                                 </button></td>
-                                                        </tr>
-                                                    @endforeach
+                                                        </tr> --}}
+                                                    {{-- @endforeach --}} 
                                                 </tbody>
                                             </table>
                                         </div>
@@ -116,14 +116,15 @@
     </div>
 @endsection
 
-{{-- @push('scripts')
+@push('scripts')
     <script>
         $(document).ready(function() {
 
             $('#datatable').DataTable({
-                // alert
+
                 processing: true,
                 serverSide: true,
+                method: 'GET',
                 ajax: "{{ route('parkingreport.getData') }}",
                 columns: [{
                         data: 'id',
@@ -156,25 +157,18 @@
                     {
                         data: 'created_at',
                         name: 'created_at'
-                    }
-                    order: [
-                        [0, 'asc']
-                    ], // Default sorting by the first column (ID) in ascending order
-                    pageLength: 10 // Display 10 records per page
+                    },
+                    
                 ]
             });
         });
     </script>
-@endpush --}}
+@endpush
 {{-- @php
 echo"complete";die;
 @endphp --}}
 @push('scripts')
-    <link rel="stylesheet" href="{{ 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css' }}" />
-    <script src="{{ 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js' }}"></script> 
- <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script> 
- <script src="script.js"></script> 
- <script type="text/javascript">
+    <script type="text/javascript">
         var map = L.map('map').setView([10.84125, 79.84266000000001], 6);
         // create a new tile layer
         var tileUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -217,19 +211,15 @@ echo"complete";die;
             StartMarker1 = L.marker(startCoords, {
                 icon: redIcon
             }).addTo(map);
-            // map.setZoom(10);
-            // console.log(map.getZoom());
-            // map.setMinZoom(map.getZoom());            
+
             var group = new L.featureGroup([StartMarker1]);
 
             map.fitBounds(group.getBounds());
-            // var popup = L.popup()
-            //     .setContent("I am a standalone popup.");
             StartMarker1.bindPopup("Andra").openPopup();
             // StartMarker1.bindPopup().openPopup();
             map.setView(startCoords, 12);
         }
     </script>
 
-</body>
- @endpush
+    </body>
+@endpush
