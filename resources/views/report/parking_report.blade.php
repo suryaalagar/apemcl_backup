@@ -57,7 +57,7 @@
                                                         <tr>
                                                             {{-- <td>{{ $trip->client_id }}</td> 
                                                             <td>{{ $trip->vehicleid }}</td>  --}}
-                                                            {{-- <td>{{ $s_no++ }}</td>
+                                                    {{-- <td>{{ $s_no++ }}</td>
                                                             <td>{{ $park->vehiclename }}</td>
                                                             <td>{{ $park->start_location }}</td>
                                                             <td>{{ $park->end_location }}</td>
@@ -70,7 +70,7 @@
                                                                     Map View
                                                                 </button></td>
                                                         </tr> --}}
-                                                    {{-- @endforeach --}} 
+                                                    {{-- @endforeach --}}
                                                 </tbody>
                                             </table>
                                         </div>
@@ -81,8 +81,6 @@
                     </div>
     </section>
 
-    </div>
-    </div>
 
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog modal-lg" role="document">
@@ -119,9 +117,9 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-
+            alert("hii");
             $('#datatable').DataTable({
-
+                
                 processing: true,
                 serverSide: true,
                 method: 'GET',
@@ -131,8 +129,8 @@
                         name: 'id'
                     },
                     {
-                        data: 'vehiclename',
-                        name: 'vehiclename'
+                        data: 'device_no',
+                        name: 'device_no'
                     },
                     {
                         data: 'start_location',
@@ -143,23 +141,24 @@
                         name: 'end_location'
                     },
                     {
-                        data: 'start_time',
-                        name: 'start_time'
+                        data: 'start_day',
+                        name: 'start_day'
                     },
                     {
-                        data: 'end_time',
-                        name: 'end_time'
+                        data: 'end_day',
+                        name: 'end_day'
                     },
                     {
-                        data: 'duration',
-                        name: 'duration'
+                        data: 'total_km',
+                        name: 'total_km'
                     },
                     {
                         data: 'created_at',
                         name: 'created_at'
                     },
-                    
-                ]
+
+                ],
+                order: [[10, 'asc']]
             });
         });
     </script>

@@ -257,18 +257,138 @@ class TripplanReportController extends Controller
         }
     }
 
-    public function trip_plan(){
-        $tripplan =DB::table('tripplan_reports')
-        ->join('live_data AS l','l.vehicle_id','=','tripplan_reports.vehicleid')
-        ->where('tripplan_reports.status','=','1')
-        ->select('tripplan_reports.*','l.lattitute','l.longitute','l.odometer','l.deviceimei',)
-        ->get()->toArray();
+    // public function trip_plan()
+    // {
+    //     $tripplan = DB::table('tripplan_reports')
+    //         ->join('live_data AS l', 'l.vehicle_id', '=', 'tripplan_reports.vehicleid')
+    //         ->where('tripplan_reports.status', '=', '1')
+    //         ->select('tripplan_reports.*', 'l.lattitute as vehicle_lat', 'l.longitute as vehicle_lng', 'l.odometer', 'l.deviceimei',)
+    //         ->get()->toArray();
 
-        foreach($tripplan as $data){
-         
-       
+    //     foreach ($tripplan as $trip) {
+
+    //         if ($trip->status == 1) {
+
+    //             $latitude1 = $trip->s_lat;
+    //             $longitude1 = $trip->s_lat;
+    //             $latitude2 = $trip->vehicle_lat;
+    //             $longitude2 = $trip->vehicle_lng;
+    //             $radius = 200;
+    //             $distance = $this->geo_distance($latitude1, $longitude1, $latitude2, $longitude2);
+
+    //             if ($distance < $radius) {
+    //                 $data1 = array('geo_status' => 1);
+    //                 $this->db->where('trip_id', $trip->trip_id);
+    //                 $this->db->where('vehicleid', $trip->vehicleid);
+    //                 $this->db->update('tripplan_reports', $data1);
+    //             } elseif (($distance > $radius) && ($trip->geo_status == 1)) {
+    //                 $data1 = array(
+    //                     'trip_date' => $trip->created_date,
+    //                     'deviceimei' => $trip->deviceimei,
+    //                     'vehicle_name' => $trip->vehiclename,
+    //                     'start_odometer' => $trip->odometer,
+    //                     'flag' => 2,
+    //                     'create_datetime' => date('Y-m-d H:i:s'),
+    //                     'status' => 2,
+    //                     'geo_status' => 0,
+    //                 );
+    //                 $this->db->where('trip_id', $trip->trip_id);
+    //                 $this->db->where('vehicleid', $trip->vehicleid);
+    //                 $this->db->update('zigma_plantrip', $data1);
+    //             }
+    //         }
+    //     }
+    // }
+
+    // public function geo_distance($latitude1, $longitude1, $latitude2, $longitude2)
+    // {
+    //     $dis_query =  DB::select("SELECT find_distance('{$latitude1}', '{$longitude1}', '{$latitude2}','{$longitude2}') as distance;");
+    //     $result = $dis_query;
+    //     $wp_dis = $result[0]->distance;
+    //     $v_dis = $wp_dis * 1000;
+    //     return  $v_dis = round($v_dis);
+    // }
+
+    public function trip_plan()
+    {
+        $tripplan = DB::table('tripplan_reports')
+            ->join('live_data AS l', 'l.vehicle_id', '=', 'tripplan_reports.vehicleid')
+            ->whereIn('tripplan_reports.status', [1, 2])
+            ->select('tripplan_reports.*', 'l.lattitute as vehicle_lat', 'l.longitute as vehicle_lng', 'l.odometer', 'l.deviceimei',)
+            ->get()->toArray();
+        $first_geo_status_arr = array();
+        foreach ($tripplan as $trip) {
+            if ($trip->status == 1) {
+                $start_lat = $trip->s_lat;
+                $start_lng = $trip->s_lat;
+                $vehicle_lat = $trip->vehicle_lat;
+                $vehicle_lng = $trip->vehicle_lng;
+                $radius = 200;
+                $distance_data = $this->calculateDistance($start_lat, $start_lng, $vehicle_lat, $vehicle_lng, $radius);
+                if ($distance_data['location_status
+                '] == 1) {
+                    $first_geo_status_arr[] = array($trip->trip_id);
+                } elseif (($distance_data['location_status'] == 2) && ($trip->geo_status == 1)) {
+                    $processing_arr = array(
+                        'trip_date' => $trip->created_date,
+                        'deviceimei' => $trip->deviceimei,
+                        'vehicle_name' => $trip->vehiclename,
+                        'start_odometer' => $trip->odometer,
+                        'flag' => 2,
+                        'create_datetime' => date('Y-m-d H:i:s'),
+                        'status' => 2,
+                        'geo_status' => 0
+                    );
+                    DB::table('tripplan_reports')->whereIn('trip_id', $trip->trip_id)
+                        ->update($processing_arr);
+                } elseif ($trip->status == 2) {
+                    $end_lat = $trip->e_lat;
+                    $e_lng = $trip->e_lat;
+                    $distance_data = $this->calculateDistance($end_lat, $e_lng, $vehicle_lat, $vehicle_lng, $radius);
+                    if ($distance_data['location_status'] == 1) {
+                        $end_trip_arr = array(
+                            'end_odometer' => $trip->odometer,
+                            'distance' => $distance_data['distance'],
+                            'end_location' => $trip->latlon_address,
+                            'manual_idle_dur' => '',
+                            'parking_duration' => '',
+                            'flag' => 3,
+                            'updated_datetime' => date('Y-m-d H:i:s')
+                        );
+                        DB::table('tripplan_reports')->whereIn('trip_id', $trip->trip_id)
+                            ->update($end_trip_arr);
+                    }
+                }
+            }
         }
-       
-
+        if (count($first_geo_status_arr) > 0 && !empty($first_geo_status_arr)) {
+            DB::table('tripplan_reports')->whereIn('trip_id', $first_geo_status_arr)
+                ->update(['geo_status' => 1]);
+        }
+    }
+    function calculateDistance($lat1, $lon1, $lat2, $lon2, $radius)
+    {
+        // Calculate Distance Formula
+        $earthRadius = 6371; // Earth's radius in kilometers
+        $latd1 = deg2rad($lat1);
+        $lond1 = deg2rad($lon1);
+        $latd2 = deg2rad($lat2);
+        $lond2 = deg2rad($lon2);
+        // Haversine formula
+        $deltaLat = $latd2 - $latd1;
+        $deltaLon = $lond2 - $lond1;
+        $a = sin($deltaLat / 2) * sin($deltaLat / 2) + cos($latd1) * cos($latd2) * sin($deltaLon / 2) * sin($deltaLon / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        $distance = $earthRadius * $c;
+        $distance = round($distance * 1000);
+        if ($distance < $radius)
+            $status =  1;
+        else
+            $status =  2;
+        $distance_data = array(
+            'distance' => $distance,
+            'location_status' => $status
+        );
+        return $distance_data;
     }
 }

@@ -11,11 +11,11 @@ class ParkingReport extends Model
 
     protected $fillable = [
         'id',
-        'vehiclename',
+        'device_no',
         'start_location',
         'end_location',
-        'start_time',
-        'end_time',
+        'start_day',
+        'end_day',
         'duration',
         'created_at',
     ];
