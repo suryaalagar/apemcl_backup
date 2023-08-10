@@ -17,7 +17,7 @@
                                             <h3 align="center">Key On Key Off Report</h3>
 
                                             <br />
-                                            <table class="table table-striped table-bordered user_datatable">
+                                            <table class="table table-striped table-bordered" id="datatable">
                                                 <thead>
                                                     <tr>
                                                         <th>S.No</th>
@@ -35,7 +35,7 @@
                                                 </thead>
 
                                                 <tbody>
-                                                    @php
+                                                    {{-- @php
                                                         $s_no = 1;
                                                     @endphp
                                                     @foreach ($keyonkeyoff_data as $keyonkeyoff)
@@ -58,7 +58,7 @@
                                                             <td>{{ $keyonkeyoff->end_location }}</td>
 
                                                         </tr>
-                                                    @endforeach
+                                                    @endforeach --}}
                                                 </tbody>
                                             </table>
                                         </div>
@@ -100,3 +100,64 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $('#datatable').DataTable({
+
+                processing: true,
+                serverSide: true,
+                method: 'GET',
+                ajax: "{{ route('parkingreport.getData') }}",
+                columns: [{
+                        data: 'id',
+                        name: 'id'
+                    },
+                    {
+                        data: 'device_no',
+                        name: 'device_no'
+                    },
+                    {
+                        data: 'start_location',
+                        name: 'start_location'
+                    },
+                    {
+                        data: 'end_location',
+                        name: 'end_location'
+                    },
+                    {
+                        data: 'start_day',
+                        name: 'start_day'
+                    },
+                    {
+                        data: 'end_day',
+                        name: 'end_day'
+                    },
+                    {
+                        data: 'total_km',
+                        name: 'total_km'
+                    },
+                    {
+                        data: 'created_at',
+                        name: 'created_at'
+                    }, 
+                    {
+                        data: 'created_at',
+                        name: 'created_at'
+                    }, 
+                    {
+                        data: 'created_at',
+                        name: 'created_at'
+                    },
+                    {
+                        data: 'created_at',
+                        name: 'created_at'
+                    },
+
+                ]
+
+            });
+        });
+    </script>
+@endpush

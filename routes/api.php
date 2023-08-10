@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\CronJob;
 use App\Http\Controllers\API\IdleReportController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,3 +22,4 @@ use Illuminate\Support\Facades\Route;
 // Route::middleware('auth')->group(function () {
 // });
 Route::get('idle_report', [IdleReportController::class,'index']);
+Route::POST('add_tripplan', [CronJob::class,'add_trip_plan']);

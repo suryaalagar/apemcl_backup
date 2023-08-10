@@ -23,69 +23,56 @@ class ParkingReportController extends Controller
 
     public function getData(Request $request)
     {
-        // dd($request->all());
 
-        // $columns = ['id', 'vehiclename', 'start_location', 'end_location', 'start_time', 'end_time', 'duration', 'created_at'];
-        // $query = DB::select($columns);
-        // dd($query);
-        // $columnIndex = $request->input('order.0.column');
-        // $columnName = $columns[$columnIndex];
-        // $columnDirection = $request->input('order.0.dir');
-        // $query->orderBy($columnName, $columnDirection);
-        // $data = $query->paginate(10);
-
-        // return response()->json($data);
-
-        // dd($request->get('order'));
-        $draw                 =         $request->get('draw'); // Internal use
-        $start                 =         $request->get("start"); // where to start next records for pagination
-        $rowPerPage         =         $request->get("length"); // How many recods needed per page for pagination
-
-        $orderArray         =         $request->get('order');
-        $columnNameArray     =         $request->get('columns'); // It will give us columns array
-
-        $searchArray         =         $request->get('search');
-        $columnIndex         =         $orderArray[0]['column'];  // This will let us know,
-        // which column index should be sorted 
-        // 0 = id, 1 = name, 2 = email , 3 = created_at
-
-        $columnName         =         $columnNameArray[$columnIndex]['data']; // Here we will get column name, 
-        // Base on the index we get
-
-        $columnSortOrder     =         $orderArray[0]['dir']; // This will get us order direction(ASC/DESC)
-        $searchValue         =         $searchArray['value']; // This is search value 
-
-
-        $parking_reports = ParkingReport::all();
-        $total = $parking_reports->count();
-
-        $totalFilter = ParkingReport::all();
-        if (!empty($searchValue)) {
-            $totalFilter = $totalFilter->where('name', 'like', '%' . $searchValue . '%');
-            $totalFilter = $totalFilter->orWhere('email', 'like', '%' . $searchValue . '%');
-        }
-        $totalFilter = $totalFilter->count();
-
-
-        $arrData = ParkingReport::all();
-        $arrData = $arrData->skip($start)->take($rowPerPage);
-        $arrData = $arrData->orderBy($columnName, $columnSortOrder);
-
-        if (!empty($searchValue)) {
-            $arrData = $arrData->where('name', 'like', '%' . $searchValue . '%');
-            $arrData = $arrData->orWhere('email', 'like', '%' . $searchValue . '%');
-        }
-
-        $arrData = $arrData->get();
-        //    print_r($arrData);die;
-        $response = array(
-            "draw" => intval($draw),
-            "recordsTotal" => $total,
-            "recordsFiltered" => $totalFilter,
-            "data" => $arrData,
+        $totalFilteredRecord = $totalDataRecord = $draw_val = "";
+        $columns_list = array(
+            0 => 'id'
         );
 
-        return response()->json($response);
+        $totalDataRecord = ParkingReport::count();
+
+        $totalFilteredRecord = $totalDataRecord;
+
+        $limit_val = $request->input('length');
+        $start_val = $request->input('start');
+        $order_val = $columns_list[$request->input('order.0.column')];
+        $dir_val = $request->input('order.0.dir');
+
+        if (empty($request->input('search.value'))) {
+            $post_data = ParkingReport::offset($start_val)
+                ->limit($limit_val)
+                ->orderBy($order_val, $dir_val)
+                ->get();
+        } else {
+            $search_text = $request->input('search.value');
+
+            $post_data =  ParkingReport::where('id', 'LIKE', "%{$search_text}%")
+                ->orWhere('device_no', 'LIKE', "%{$search_text}%")
+                ->orWhere('start_location', 'LIKE', "%{$search_text}%")
+                ->orWhere('end_location', 'LIKE', "%{$search_text}%")
+                ->offset($start_val)
+                ->limit($limit_val)
+                ->orderBy($order_val, $dir_val)
+                ->get();
+
+            $totalFilteredRecord = ParkingReport::where('id', 'LIKE', "%{$search_text}%")
+                ->orWhere('device_no', 'LIKE', "%{$search_text}%")
+                ->orWhere('start_location', 'LIKE', "%{$search_text}%")
+                ->orWhere('end_location', 'LIKE', "%{$search_text}%")
+                ->count();
+        }
+
+        if (!empty($post_data)) {
+            $draw_val = $request->input('draw');
+            $get_json_data = array(
+                "draw"            => intval($draw_val),
+                "recordsTotal"    => intval($totalDataRecord),
+                "recordsFiltered" => intval($totalFilteredRecord),
+                "data"            => $post_data
+            );
+
+            echo json_encode($get_json_data);
+        }
     }
     /**
      * Show the form for creating a new resource.

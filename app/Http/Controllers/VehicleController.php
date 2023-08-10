@@ -2,23 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\IdleReport;
-use App\Http\Requests\StoreIdleReportRequest;
-use App\Http\Requests\UpdateIdleReportRequest;
-// use GuzzleHttp\Psr7\Request;
+use App\Models\Vehicle;
+use App\Http\Requests\StorevehicleRequest;
+use App\Http\Requests\UpdatevehicleRequest;
 use Illuminate\Http\Request;
 
-class IdleReportController extends Controller
+class VehicleController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-
-        // $idle_data = IdleReport::get();
-        // return view('report.idle_report', compact('idle_data'));
-        return view('report.idle_report');
+        return view('vehicle.vehicle');
     }
 
     public function getData(Request $request)
@@ -29,7 +25,7 @@ class IdleReportController extends Controller
             0 => 'id'
         );
 
-        $totalDataRecord = IdleReport::count();
+        $totalDataRecord = Vehicle::count();
 
         $totalFilteredRecord = $totalDataRecord;
 
@@ -39,14 +35,14 @@ class IdleReportController extends Controller
         $dir_val = $request->input('order.0.dir');
 
         if (empty($request->input('search.value'))) {
-            $post_data = IdleReport::offset($start_val)
+            $post_data = Vehicle::offset($start_val)
                 ->limit($limit_val)
                 ->orderBy($order_val, $dir_val)
                 ->get();
         } else {
             $search_text = $request->input('search.value');
 
-            $post_data =  IdleReport::where('id', 'LIKE', "%{$search_text}%")
+            $post_data =  Vehicle::where('id', 'LIKE', "%{$search_text}%")
                 ->orWhere('device_no', 'LIKE', "%{$search_text}%")
                 ->orWhere('start_location', 'LIKE', "%{$search_text}%")
                 ->orWhere('end_location', 'LIKE', "%{$search_text}%")
@@ -55,7 +51,7 @@ class IdleReportController extends Controller
                 ->orderBy($order_val, $dir_val)
                 ->get();
 
-            $totalFilteredRecord = IdleReport::where('id', 'LIKE', "%{$search_text}%")
+            $totalFilteredRecord = Vehicle::where('id', 'LIKE', "%{$search_text}%")
                 ->orWhere('device_no', 'LIKE', "%{$search_text}%")
                 ->orWhere('start_location', 'LIKE', "%{$search_text}%")
                 ->orWhere('end_location', 'LIKE', "%{$search_text}%")
@@ -79,13 +75,13 @@ class IdleReportController extends Controller
      */
     public function create()
     {
-        //
+    
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreIdleReportRequest $request)
+    public function store(StorevehicleRequest $request)
     {
         //
     }
@@ -93,7 +89,7 @@ class IdleReportController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(IdleReport $idleReport)
+    public function show(vehicle $vehicle)
     {
         //
     }
@@ -101,7 +97,7 @@ class IdleReportController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(IdleReport $idleReport)
+    public function edit(vehicle $vehicle)
     {
         //
     }
@@ -109,7 +105,7 @@ class IdleReportController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateIdleReportRequest $request, IdleReport $idleReport)
+    public function update(UpdatevehicleRequest $request, vehicle $vehicle)
     {
         //
     }
@@ -117,7 +113,7 @@ class IdleReportController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(IdleReport $idleReport)
+    public function destroy(vehicle $vehicle)
     {
         //
     }

@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PlayBackHistoryReport extends Model
+class CronJob extends Model
 {
     use HasFactory;
-    protected $table = 'play_back_history';
 }

@@ -39,7 +39,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>S.No</th>
-                                                        <th>vehicle_name</th>
+                                                        <th>device_no</th>
                                                         <th>start_location</th>
                                                         <th>end_location</th>
                                                         <th>Start Time</th>
@@ -117,7 +117,6 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            alert("hii");
             $('#datatable').DataTable({
                 
                 processing: true,
@@ -157,8 +156,8 @@
                         name: 'created_at'
                     },
 
-                ],
-                order: [[10, 'asc']]
+                ]
+                
             });
         });
     </script>

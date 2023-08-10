@@ -111,7 +111,7 @@
     </div>
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script> --}}
 @endsection
-@push('scripts')   
+@push('scripts')
     <script type="text/javascript">
         var map = L.map('map').setView([10.84125, 79.84266000000001], 6);
         // create a new tile layer
@@ -121,6 +121,9 @@
                 maxZoom: 20,
                 noWrap: true,
             });
+        // L.control.zoom({
+        //     position: 'topright'
+        // }).addTo(map);
         // add the layer to the map
         // Google Layer
         var Google_layer = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
