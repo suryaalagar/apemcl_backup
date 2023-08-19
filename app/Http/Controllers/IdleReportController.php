@@ -62,16 +62,44 @@ class IdleReportController extends Controller
                 ->count();
         }
 
-        if (!empty($post_data)) {
-            $draw_val = $request->input('draw');
-            $get_json_data = array(
-                "draw"            => intval($draw_val),
-                "recordsTotal"    => intval($totalDataRecord),
-                "recordsFiltered" => intval($totalFilteredRecord),
-                "data"            => $post_data
-            );
+        // if (!empty($post_data)) {
+        //     $draw_val = $request->input('draw');
+        //     $get_json_data = array(
+        //         "draw"            => intval($draw_val),
+        //         "recordsTotal"    => intval($totalDataRecord),
+        //         "recordsFiltered" => intval($totalFilteredRecord),
+        //         "data"            => $post_data
+        //     );
+            $count = 1;
+            foreach ($post_data as $data) {
+                $edit = '<button type="button" class="btn btn-success showModal"
+                data-toggle="modal" data-target="#myModal"
+                data-lat="' . $data->start_latitude . '" data-lng="' . $data->start_longitude . '">
+                Map View
+            </button>';
+                // $delete = '<a><i class="fa fa-trash " aria-hidden="true"></i></a>';
 
-            echo json_encode($get_json_data);
+                $array_data[] = array(
+                    'S No' => $count++,
+                    'vehicle_id' => $data->vehicle_id,
+                    'device_imei' => $data->device_imei,
+                    'start_datetime' => $data->start_datetime,
+                    'end_datetime' => $data->end_datetime,
+                    // 'duration' => $data->end_datetime - $data->start_datetime,
+                    'Action' => $edit
+                );
+            }
+            if (!empty($array_data)) {
+                $draw_val = $request->input('draw');
+                $get_json_data = array(
+                    "draw"            => intval($draw_val),
+                    "recordsTotal"    => intval($totalDataRecord),
+                    "recordsFiltered" => intval($totalFilteredRecord),
+                    "data"            => $array_data
+                );
+
+                echo json_encode($get_json_data);
+            
         }
     }
     /**

@@ -23,13 +23,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-
+Route::get('get_apemcl_data',[PlayBackHistoryReportController::class,'get_apemcl_data'])->name('playbackhistoryreport.get_apemcl_data');
+Route::get('demo_test',[PlayBackHistoryReportController::class,'demo_test'])->name('playbackhistoryreport.demo_test');
 
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class,'index'])->name('dashboard');
+    Route::get('all_vehicles', [DashboardController::class,'all_vehicles'])->name('dashboard.all_vehicles');
     Route::resource('/setting', SettingController::class);
+    // Route::get('get_apemcl_data', DashboardController::class,'get_apemcl_data')->name('dashboard');
     // Route::get('/tripplanreport', TripplanReportController::class);
     // Route::get('idlereport',[IdleReportController::class, 'index'])->name('idlereport.get_data');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -37,6 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('tripplanreport',[TripplanReportController::class,'index'])->name('tripplanreport.index');
     Route::get('trip_plan_cron',[TripplanReportController::class,'trip_plan'])->name('tripplanreport.trip_plan');
+    Route::post('trip_plan_table',[TripplanReportController::class,'getData'])->name('trip_plan.getData');
     Route::get('idlereport',[IdleReportController::class,'index'])->name('idlereport.index');
     Route::get('idlereport_table',[IdleReportController::class,'getData'])->name('idlereport.getData');
     // Route::get('parkingreport',[ParkingReportController::class,'index'])->name('parkingreport.index');
@@ -47,6 +50,10 @@ Route::middleware('auth')->group(function () {
     Route::get('playbackhistoryreport',[PlayBackHistoryReportController::class,'index'])->name('playbackhistoryreport.index');
     Route::get('vehicle',[VehicleController::class,'index'])->name('vehicle.index');
     Route::get('vehicle_table',[VehicleController::class,'getData'])->name('vehicle.getData');
+    Route::get('create',[VehicleController::class,'create'])->name('vehicle.create');
+    Route::post('store',[VehicleController::class,'store'])->name('vehicle.store');
+    Route::get('edit',[VehicleController::class,'edit'])->name('vehicle.edit');
+    Route::post('update',[VehicleController::class,'update'])->name('vehicle.update');
 
 
 });
@@ -54,4 +61,4 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 Auth::routes();
-
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

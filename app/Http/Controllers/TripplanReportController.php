@@ -3,101 +3,102 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Yajra\DataTables\Facades\Datatables;
 use App\Models\TripplanReport;
 use Illuminate\Support\Facades\DB;
-// use DataTables;
-// use Validator;
 
 class TripplanReportController extends Controller
 {
 
     public function index(Request $request)
     {
-
-        // if ($request->ajax()) {
-
-        // $data = TripplanReport::select('*');
-        // return Datatables::of($data)
-        //     ->addIndexColumn()
-        //     ->addColumn('action', function($row){
-        //         $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
-        //         return $actionBtn;
-        //     })
-        //     ->rawColumns(['action'])
-        //     ->make(true);
-        //return view('report.trip_plan',compact($data));
         $trip_plans = TripplanReport::get();
-        return view('report.trip_plan', compact('trip_plans'));
-        // }
-
+        $from_date = date('Y-m-d H:i:s', strtotime('00:00:00'));
+        $to_date = date('Y-m-d H:i:s', strtotime('23:59:59'));
+        return view('report.trip_plan', compact('trip_plans', 'from_date', 'to_date'));
     }
 
     public function getData(Request $request)
     {
+        $data = ($request->all());
+        $fromdate = date('Y-m-d H:i:s', strtotime($request->input('fromdate')));
+        $todate = date('Y-m-d H:i:s', strtotime($request->input('todate')));
+        // dd($todate);
+        $trip_status = $request->input('trip_status');
 
-        $draw                 =         $request->get('draw'); // Internal use
-        $start                 =         $request->get("start"); // where to start next records for pagination
-        $rowPerPage         =         $request->get("length"); // How many recods needed per page for pagination
-
-        $orderArray        =         $request->get('order');
-        $columnNameArray     =         $request->get('columns'); // It will give us columns array
-
-        $searchArray         =         $request->get('search');
-        $columnIndex         =         $orderArray[0]['column'];  // This will let us know,
-        // which column index should be sorted 
-        // 0 = id, 1 = name, 2 = email , 3 = created_at
-
-        $columnName         =         $columnNameArray[$columnIndex]['data']; // Here we will get column name, 
-        // Base on the index we get
-
-        $columnSortOrder     =         $orderArray[0]['dir']; // This will get us order direction(ASC/DESC)
-        $searchValue         =         $searchArray['value']; // This is search value 
-
-
-        $users = TripplanReport::count();
-        $total = $users->count();
-
-        $totalFilter = \DB::table('tripplan_reports');
-        if (!empty($searchValue)) {
-            $totalFilter = $totalFilter->where('client_id', 'like', '%' . $searchValue . '%');
-            $totalFilter = $totalFilter->orWhere('vehicleid', 'like', '%' . $searchValue . '%');
-            $totalFilter = $totalFilter->orWhere('vehicle_name', 'like', '%' . $searchValue . '%');
-            $totalFilter = $totalFilter->orWhere('start_location', 'like', '%' . $searchValue . '%');
-            $totalFilter = $totalFilter->orWhere('end_location', 'like', '%' . $searchValue . '%');
-            $totalFilter = $totalFilter->orWhere('poc_number', 'like', '%' . $searchValue . '%');
-            $totalFilter = $totalFilter->orWhere('route_name', 'like', '%' . $searchValue . '%');
-        }
-        $totalFilter = $totalFilter->count();
-
-
-        $arrData = \DB::table('tripplan_reports');
-        $arrData = $arrData->skip($start)->take($rowPerPage);
-        $arrData = $arrData->orderBy($columnName, $columnSortOrder);
-        if (!empty($searchValue)) {
-            // $arrData = $arrData->where('name','like','%'.$searchValue.'%');
-            // $arrData = $arrData->orWhere('email','like','%'.$searchValue.'%');
-            $arrData = $arrData->where('client_id', 'like', '%' . $searchValue . '%');
-            $arrData = $arrData->orWhere('vehicleid', 'like', '%' . $searchValue . '%');
-            $arrData = $arrData->orWhere('vehicle_name', 'like', '%' . $searchValue . '%');
-            $arrData = $arrData->orWhere('start_location', 'like', '%' . $searchValue . '%');
-            $arrData = $arrData->orWhere('end_location', 'like', '%' . $searchValue . '%');
-            $arrData = $arrData->orWhere('poc_number', 'like', '%' . $searchValue . '%');
-            $arrData = $arrData->orWhere('route_name', 'like', '%' . $searchValue . '%');
-        }
-
-        $arrData = $arrData->get();
-
-        $response = array(
-            "draw" => intval($draw),
-            "recordsTotal" => $total,
-            "recordsFiltered" => $totalFilter,
-            "data" => $arrData,
+        $totalFilteredRecord = $totalDataRecord = $draw_val = "";
+        $columns_list = array(
+            0 => 'trip_id'
         );
 
-        return response()->json($response);
-    }
+        $totalDataRecord = TripplanReport::count();
+        $totalFilteredRecord = $totalDataRecord;
 
+        $limit_val = $request->input('length');
+        $start_val = $request->input('start');
+        $order_val = $columns_list[$request->input('order.0.column')];
+        $dir_val = $request->input('order.0.dir');
+
+        if (empty($request->input('search.value'))) {
+            if ($trip_status == 0) {
+                $post_data = TripplanReport::whereBetween('trip_date', [$fromdate, $todate])
+                    ->offset($start_val)
+                    ->limit($limit_val)
+                    ->orderBy($order_val, $dir_val)
+                    ->get();
+            } else {
+                $post_data = TripplanReport::whereBetween('trip_date', [$fromdate, $todate])
+                    ->where('status', '=', "$trip_status")
+                    ->offset($start_val)
+                    ->limit($limit_val)
+                    ->orderBy($order_val, $dir_val)
+                    ->get();
+            }
+        } else {
+            $search_text = $request->input('search.value');
+
+            $post_data =  TripplanReport::where('id', 'LIKE', "%{$search_text}%")
+                ->orWhere('device_no', 'LIKE', "%{$search_text}%")
+                ->orWhere('start_location', 'LIKE', "%{$search_text}%")
+                ->orWhere('end_location', 'LIKE', "%{$search_text}%")
+                ->offset($start_val)
+                ->limit($limit_val)
+                ->orderBy($order_val, $dir_val)
+                ->get();
+
+            $totalFilteredRecord = TripplanReport::where('id', 'LIKE', "%{$search_text}%")
+                ->orWhere('device_no', 'LIKE', "%{$search_text}%")
+                ->orWhere('start_location', 'LIKE', "%{$search_text}%")
+                ->orWhere('end_location', 'LIKE', "%{$search_text}%")
+                ->count();
+        }
+        $count = 1;
+        foreach ($post_data as $data) {
+            // $edit = '<a href="' . route('vehicle.edit', ['id' => $data->id]) . '"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+            // $delete = '<a><i class="fa fa-trash " aria-hidden="true"></i></a>';
+
+            $array_data[] = array(
+                'S No' => $count++,
+                'trip_id' => $data->trip_id,
+                'poc_number' => $data->poc_number,
+                'device_no' => $data->device_no,
+                'trip_date' => $data->trip_date,
+                'vehicle_name' => $data->vehicle_name,
+                'route_name' => $data->route_name
+                // 'Action' => $edit . ' ' . $delete
+            );
+        }
+        if (!empty($array_data)) {
+            $draw_val = $request->input('draw');
+            $get_json_data = array(
+                "draw"            => intval($draw_val),
+                "recordsTotal"    => intval($totalDataRecord),
+                "recordsFiltered" => intval($totalFilteredRecord),
+                "data"            => $array_data
+            );
+
+            echo json_encode($get_json_data);
+        }
+    }
     public function zigma_trip_plan()
     {
 
@@ -257,58 +258,6 @@ class TripplanReportController extends Controller
         }
     }
 
-    // public function trip_plan()
-    // {
-    //     $tripplan = DB::table('tripplan_reports')
-    //         ->join('live_data AS l', 'l.vehicle_id', '=', 'tripplan_reports.vehicleid')
-    //         ->where('tripplan_reports.status', '=', '1')
-    //         ->select('tripplan_reports.*', 'l.lattitute as vehicle_lat', 'l.longitute as vehicle_lng', 'l.odometer', 'l.deviceimei',)
-    //         ->get()->toArray();
-
-    //     foreach ($tripplan as $trip) {
-
-    //         if ($trip->status == 1) {
-
-    //             $latitude1 = $trip->s_lat;
-    //             $longitude1 = $trip->s_lat;
-    //             $latitude2 = $trip->vehicle_lat;
-    //             $longitude2 = $trip->vehicle_lng;
-    //             $radius = 200;
-    //             $distance = $this->geo_distance($latitude1, $longitude1, $latitude2, $longitude2);
-
-    //             if ($distance < $radius) {
-    //                 $data1 = array('geo_status' => 1);
-    //                 $this->db->where('trip_id', $trip->trip_id);
-    //                 $this->db->where('vehicleid', $trip->vehicleid);
-    //                 $this->db->update('tripplan_reports', $data1);
-    //             } elseif (($distance > $radius) && ($trip->geo_status == 1)) {
-    //                 $data1 = array(
-    //                     'trip_date' => $trip->created_date,
-    //                     'deviceimei' => $trip->deviceimei,
-    //                     'vehicle_name' => $trip->vehiclename,
-    //                     'start_odometer' => $trip->odometer,
-    //                     'flag' => 2,
-    //                     'create_datetime' => date('Y-m-d H:i:s'),
-    //                     'status' => 2,
-    //                     'geo_status' => 0,
-    //                 );
-    //                 $this->db->where('trip_id', $trip->trip_id);
-    //                 $this->db->where('vehicleid', $trip->vehicleid);
-    //                 $this->db->update('zigma_plantrip', $data1);
-    //             }
-    //         }
-    //     }
-    // }
-
-    // public function geo_distance($latitude1, $longitude1, $latitude2, $longitude2)
-    // {
-    //     $dis_query =  DB::select("SELECT find_distance('{$latitude1}', '{$longitude1}', '{$latitude2}','{$longitude2}') as distance;");
-    //     $result = $dis_query;
-    //     $wp_dis = $result[0]->distance;
-    //     $v_dis = $wp_dis * 1000;
-    //     return  $v_dis = round($v_dis);
-    // }
-
     public function trip_plan()
     {
         $tripplan = DB::table('tripplan_reports')
@@ -316,48 +265,47 @@ class TripplanReportController extends Controller
             ->whereIn('tripplan_reports.status', [1, 2])
             ->select('tripplan_reports.*', 'l.lattitute as vehicle_lat', 'l.longitute as vehicle_lng', 'l.odometer', 'l.deviceimei',)
             ->get()->toArray();
+        // dd($tripplan);
         $first_geo_status_arr = array();
         foreach ($tripplan as $trip) {
+            $vehicle_lat = $trip->vehicle_lat;
+            $vehicle_lng = $trip->vehicle_lng;
+            $radius = '500';
             if ($trip->status == 1) {
                 $start_lat = $trip->s_lat;
-                $start_lng = $trip->s_lat;
-                $vehicle_lat = $trip->vehicle_lat;
-                $vehicle_lng = $trip->vehicle_lng;
-                $radius = 200;
+                $start_lng = $trip->s_lng;
                 $distance_data = $this->calculateDistance($start_lat, $start_lng, $vehicle_lat, $vehicle_lng, $radius);
-                if ($distance_data['location_status
-                '] == 1) {
+                // print_r($distance_data);die;
+                if ($distance_data['location_status'] == 1) {
                     $first_geo_status_arr[] = array($trip->trip_id);
                 } elseif (($distance_data['location_status'] == 2) && ($trip->geo_status == 1)) {
                     $processing_arr = array(
-                        'trip_date' => $trip->created_date,
-                        'deviceimei' => $trip->deviceimei,
-                        'vehicle_name' => $trip->vehiclename,
+                        'device_imei' => $trip->deviceimei,
+                        'vehicle_name' => $trip->vehicle_name,
                         'start_odometer' => $trip->odometer,
                         'flag' => 2,
-                        'create_datetime' => date('Y-m-d H:i:s'),
+                        'created_at' => date('Y-m-d H:i:s'),
                         'status' => 2,
                         'geo_status' => 0
                     );
-                    DB::table('tripplan_reports')->whereIn('trip_id', $trip->trip_id)
+                    DB::table('tripplan_reports')->whereIn('trip_id', array($trip->trip_id))
                         ->update($processing_arr);
-                } elseif ($trip->status == 2) {
-                    $end_lat = $trip->e_lat;
-                    $e_lng = $trip->e_lat;
-                    $distance_data = $this->calculateDistance($end_lat, $e_lng, $vehicle_lat, $vehicle_lng, $radius);
-                    if ($distance_data['location_status'] == 1) {
-                        $end_trip_arr = array(
-                            'end_odometer' => $trip->odometer,
-                            'distance' => $distance_data['distance'],
-                            'end_location' => $trip->latlon_address,
-                            'manual_idle_dur' => '',
-                            'parking_duration' => '',
-                            'flag' => 3,
-                            'updated_datetime' => date('Y-m-d H:i:s')
-                        );
-                        DB::table('tripplan_reports')->whereIn('trip_id', $trip->trip_id)
-                            ->update($end_trip_arr);
-                    }
+                }
+            } elseif ($trip->status == 2) {
+
+                $end_lat = $trip->e_lat;
+                $end_lng = $trip->e_lng;
+                $distance_data = $this->calculateDistance($end_lat, $end_lng, $vehicle_lat, $vehicle_lng, $radius);
+                if ($distance_data['location_status'] == 1) {
+                    $end_trip_arr = array(
+                        'end_odometer' => $trip->odometer,
+                        'distance' => $distance_data['distance'],
+                        'flag' => 3,
+                        'status' => 3,
+                        'updated_at' => date('Y-m-d H:i:s')
+                    );
+                    DB::table('tripplan_reports')->whereIn('trip_id', array($trip->trip_id))
+                        ->update($end_trip_arr);
                 }
             }
         }
@@ -366,6 +314,7 @@ class TripplanReportController extends Controller
                 ->update(['geo_status' => 1]);
         }
     }
+
     function calculateDistance($lat1, $lon1, $lat2, $lon2, $radius)
     {
         // Calculate Distance Formula

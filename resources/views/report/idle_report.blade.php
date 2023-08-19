@@ -112,53 +112,44 @@
 
 
     @push('scripts')
-    <script>
-        $(document).ready(function() {
-            $('#datatable').DataTable({
-                
-                processing: true,
-                serverSide: true,
-                method: 'GET',
-                ajax: "{{ route('idlereport.getData') }}",
-                columns: [{
-                        data: 'id',
-                        name: 'id'
-                    },
-                    {
-                        data: 'device_no',
-                        name: 'device_no'
-                    },
-                    {
-                        data: 'start_location',
-                        name: 'start_location'
-                    },
-                    {
-                        data: 'end_location',
-                        name: 'end_location'
-                    },
-                    {
-                        data: 'start_day',
-                        name: 'start_day'
-                    },
-                    {
-                        data: 'end_day',
-                        name: 'end_day'
-                    },
-                    {
-                        data: 'total_km',
-                        name: 'total_km'
-                    },
-                    {
-                        data: 'created_at',
-                        name: 'created_at'
-                    },
+        <script>
+            $(document).ready(function() {
+                $('#datatable').DataTable({
 
-                ]
-                
+                    processing: true,
+                    serverSide: true,
+                    method: 'GET',
+                    ajax: "{{ route('idlereport.getData') }}",
+                    columns: [{
+                            data: 'S No',
+                            name: 'S No'
+                        },
+                        {
+                            data: 'vehicle_id',
+                            name: 'vehicle_id'
+                        },
+                        {
+                            data: 'device_imei',
+                            name: 'device_imei'
+                        },
+                        {
+                            data: 'start_datetime',
+                            name: 'start_datetime'
+                        },
+                        {
+                            data: 'end_datetime',
+                            name: 'end_datetime'
+                        },
+                        {
+                            data: 'Action',
+                            name: 'Action'
+                        }
+
+                    ]
+                });
             });
-        });
-    </script>
-@endpush
+        </script>
+    @endpush
 @endsection
 
 @push('scripts')
@@ -182,13 +173,16 @@
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
         });
         map.addLayer(Google_layer);
-        $('.showModal').on('click', function() {
-            var lat = $(this).data('lat');
-            var lng = $(this).data('lng');
-            setTimeout(function() {
-                map.invalidateSize();
-                showMap(lat, lng);
-            }, 200);
+        $(document).ready(function() {
+            $('.showModal').on('click', function() {
+                console.log("hello");
+                var lat = $(this).data('lat');
+                var lng = $(this).data('lng');
+                setTimeout(function() {
+                    map.invalidateSize();
+                    showMap(lat, lng);
+                }, 2000);
+            });
         });
 
         function showMap(lat, lng) {

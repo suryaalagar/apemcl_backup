@@ -113,12 +113,14 @@
 @endsection
 @push('scripts')
     <script type="text/javascript">
+        var marker;
+        var markers = [];
         var map = L.map('map').setView([10.84125, 79.84266000000001], 6);
         // create a new tile layer
         var tileUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             layer = new L.TileLayer(tileUrl, {
                 attribution: 'Maps © <a href=\"www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors',
-                maxZoom: 20,
+                maxZoom: 15,
                 noWrap: true,
             });
         // L.control.zoom({
@@ -131,6 +133,120 @@
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
         });
         map.addLayer(Google_layer);
+        var fg = L.featureGroup().addTo(map);
+        var assetLayerGroup = new L.LayerGroup();
+        var first_time = true;
+        $(document).ready(function() {
+
+            update_all_data1();
+
+        });
+
+        setInterval(() => {
+            update_all_data1();
+        }, 3000);
+
+        function update_all_data1() {
+
+            // if(marker !==undefined){
+            //         map.removeLayer(marker);
+            //       }
+            //       if(markers !==undefined){
+            //         map.removeLayer(markers);
+            //       }
+
+
+            $.ajax({
+                url: '{{ route('dashboard.all_vehicles') }}',
+                type: 'GET',
+                dataType: "json",
+                success: function(data) {
+
+                    if (fg) {
+                        fg.clearLayers();
+                    }
+
+                    for (i = 0; i < data.length; i++) {
+                        // console.log(data[i]);
+                        // var vehicle_sleep = parseInt(data[i].vehicle_sleep);
+                        // var v_acc_on = parseInt(data[i].ignition);
+                        // var v_speed = parseInt(data[i].speed);
+                        // var angle = parseInt(data[i].angle);
+                        // // var vehicletype = parseInt(data[i].vehicle_type);
+                        // var v_u_time = parseInt(data[i].update_time);
+                        // var colour = "";
+                        // var current_status = "";
+                        if (data[i].update_time <= 10) {
+                            if (data[i].ignition == 1) {
+                                if (data[i].speed > 0) {
+
+                                    var image_path = "{{ asset('assets/dist/img/ICONS/GREEN/truck.png') }}";
+
+                                } else {
+                                    var image_path = "{{ asset('assets/dist/img/ICONS/YELLOW/truck.png') }}";
+                                }
+                            } else {
+                                var image_path = "{{ asset('assets/dist/img/ICONS/BLUE/truck.png') }}";
+                            }
+                        } else {
+                            var image_path = "{{ asset('assets/dist/img/ICONS/GRAY/truck.png') }}";
+                        }
+                        var speed = data[i].speed == null ? 0 : data[i].speed;
+                        var redIcon = new L.Icon({
+                            iconUrl: image_path,
+                            iconSize: [40, 40],
+                        });
+
+                        var angle = data[i].angle;
+                        //     var tooltipOptions = {
+                        //         permanent: false,
+                        //         sticky: true,
+                        //         direction: 'top',
+                        //         offset: [0, -30]
+                        //     };
+
+
+                        marker = new L.marker([data[i].lattitute, data[i].longitute], {
+                                icon: redIcon,
+                                rotationAngle: angle
+                            })
+                            .addTo(fg);
+                        //         .bindTooltip("<div style='background:" + colour +
+                        //             ";box-shadow: 0 1px 3px rgba(0,0,0,0.4);border: 0px solid lightyellow; padding:1px 3px 1px 3px'><b> Vehicle : " +
+                        //             data[i].vehiclename + "</b><br><b>Status:" + current_status +
+                        //             "</b><br><b>Speed:" + speed + "Km/Hr</b><br><b>Last Update:" + data[i]
+                        //             .updatedon + "</b><br><b>Since:" + data[i].last_dur + "</b>", tooltipOptions)
+                        //         .openTooltip()
+                        //         //.bindPopup(" Vehicle  : " + data[i].vehiclename)
+                        //         .addTo(fg);
+
+
+                        // map.removeLayer(marker);
+                        map.addLayer(marker);
+
+                        markers.push(marker);
+                        //marker.addTo(map);
+                        // }
+                        // //         map.eachLayer(function(layer) {
+                        // // if (!!layer.toGeoJSON) {
+                        // //   map.removeLayer(layer);
+                        // // }
+                        // // });
+                        assetLayerGroup.addLayer(marker);
+                        // if (first_time) {
+                        //     map.fitBounds(fg.getBounds());
+                        // }
+                        // map.fitBounds(fg.getBounds());
+
+
+
+
+                    }
+
+                }
+            });
+
+        }
     </script>
 
     </body>

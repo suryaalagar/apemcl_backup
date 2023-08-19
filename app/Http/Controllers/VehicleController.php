@@ -6,6 +6,9 @@ use App\Models\Vehicle;
 use App\Http\Requests\StorevehicleRequest;
 use App\Http\Requests\UpdatevehicleRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+
 
 class VehicleController extends Controller
 {
@@ -57,14 +60,26 @@ class VehicleController extends Controller
                 ->orWhere('end_location', 'LIKE', "%{$search_text}%")
                 ->count();
         }
+        $count = 1;
+        foreach ($post_data as $data) {
+            $edit = '<a href="' . route('vehicle.edit', ['id' => $data->id]) . '"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+            $delete = '<a><i class="fa fa-trash " aria-hidden="true"></i></a>';
 
-        if (!empty($post_data)) {
+            $array_data[] = array(
+                'S No' => $count++,
+                'vehicle_name' => $data->vehicle_name,
+                'device_imei' => $data->device_imei,
+                'sim_mob_no' => $data->sim_mob_no,
+                'Action' => $edit . ' ' . $delete
+            );
+        }
+        if (!empty($array_data)) {
             $draw_val = $request->input('draw');
             $get_json_data = array(
                 "draw"            => intval($draw_val),
                 "recordsTotal"    => intval($totalDataRecord),
                 "recordsFiltered" => intval($totalFilteredRecord),
-                "data"            => $post_data
+                "data"            => $array_data
             );
 
             echo json_encode($get_json_data);
@@ -73,9 +88,9 @@ class VehicleController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-    
+        return view('vehicle.vehicle_create');
     }
 
     /**
@@ -83,7 +98,22 @@ class VehicleController extends Controller
      */
     public function store(StorevehicleRequest $request)
     {
-        //
+        try {
+
+            DB::beginTransaction();
+            $Vehicle = new Vehicle();
+            $Vehicle->vehicle_name = $request->input('vehicle_name');
+            $Vehicle->device_imei = $request->input('device_imei');
+            $Vehicle->sim_mob_no = $request->input('sim_mob_no');
+            $Vehicle->vehicle_type_id = $request->input('vehicle_type_id');
+            $Vehicle->save();
+            DB::commit();
+            
+            return response(['message'=>"Success"]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response(['message'=>"Failure"]);
+        }
     }
 
     /**
@@ -97,17 +127,34 @@ class VehicleController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(vehicle $vehicle)
+    public function edit(Request $request)
     {
-        //
+        $vehicle =  Vehicle::find($request->id);
+        return view('vehicle.vehicle_edit',compact('vehicle'));
+        // return view('vehicle.vehicle_edit');
+        // echo json_encode($vehicle);
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdatevehicleRequest $request, vehicle $vehicle)
-    {
-        //
+    { 
+        DB::beginTransaction();
+        try {
+            $vehicle = Vehicle::find($request->id);
+            $vehicle->vehicle_name = $request->vehicle_name;
+            $vehicle->device_imei = $request->device_imei;
+            $vehicle->sim_mob_no = $request->sim_mob_no;
+            $vehicle->vehicle_type_id = $request->vehicle_type_id;
+            $vehicle->save();
+            DB::commit();
+            // return redirect()->route('fallback-route');
+            return response(['message'=>"Success"]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response(['message'=>"Failure"]);
+        }
     }
 
     /**
@@ -115,6 +162,61 @@ class VehicleController extends Controller
      */
     public function destroy(vehicle $vehicle)
     {
-        //
+       
     }
+
+    // public function sim_import(Request $request)
+    // {
+    //     $file_path = $request->input('file_path');
+    //     if (!$file_path) {
+    //         return $this->sendError("No File Path Provided");
+    //     }
+
+    //     $validator = Validator::make($request->all(), ['file_path' => 'required']);
+
+    //     if ($validator->fails()) {
+    //         return $this->sendError("Invalid File Format");
+    //     }
+
+    //     try {
+    //         $path = $file_path;
+    //         $data = array_map('str_getcsv', file($path));
+
+    //         DB::beginTransaction();
+
+    //         foreach ($data as $row) {
+    //             $rowValidator = Validator::make($row, [
+    //                 0 => 'required', // network_id
+    //                 1 => 'required|unique:sims,sim_imei_no', // sim_imei_no (unique in 'sims' table)
+    //                 2 => 'required|unique:sims,sim_mob_no', // sim_mob_no (unique in 'sims' table)
+    //                 3 => 'required', // valid_from
+    //                 4 => 'required', // valid_to
+    //                 5 => 'required', // purchase_date
+    //                 6 => 'required' // created_by
+    //             ]);
+
+    //             if ($rowValidator->fails()) {
+    //                 DB::rollBack();
+    //                 return $this->sendError($rowValidator->errors());
+    //             }
+
+    //             Sim::create([
+    //                 'network_id' => $row[0],
+    //                 'sim_imei_no' => $row[1],
+    //                 'sim_mob_no' => $row[2],
+    //                 'valid_from' => $row[3],
+    //                 'valid_to' => $row[4],
+    //                 'purchase_date' => $row[5],
+    //                 'created_by' => $row[6]
+    //             ]);
+    //         }
+
+    //         DB::commit();
+
+    //         return $this->sendSuccess('Sim Imported Successfully');
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         return $this->sendError('An error occurred during CSV import: ' . $e->getMessage());
+    //     }
+    // }
 }

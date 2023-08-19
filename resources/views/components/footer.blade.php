@@ -23,8 +23,15 @@
     <script src="{{asset('app-assets/vendors/js/charts/chart.min.js')}}"></script>
     <script src="{{asset('app-assets/vendors/js/charts/jquery.sparkline.min.js')}}"></script>
     <script src="{{asset('app-assets/vendors/js/extensions/unslider-min.js')}}"></script>
+    
     <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/core/colors/palette-climacon.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('app-assets/fonts/simple-line-icons/style.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/vendors/css/extensions/toastr.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/vendors/css/tables/datatable/datatables.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/vendors/css/tables/extensions/buttons.dataTables.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/vendors/css/tables/datatable/buttons.bootstrap4.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/vendors/css/tables/datatable/select.dataTables.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/vendors/css/tables/extensions/dataTables.colVis.css')}}">
     <!-- END: Page Vendor JS-->
 
     <!-- BEGIN: Theme JS-->
@@ -35,6 +42,15 @@
 
     <!-- BEGIN: Page JS-->
     <script src="{{asset('app-assets/js/scripts/pages/dashboard-analytics.min.js')}}"></script>
+    <script src="{{asset('app-assets/js/scripts/extensions/toastr.min.js')}}"></script>
+    <script src="{{asset('app-assets/vendors/js/extensions/toastr.min.js')}}"></script>
+    <script src="{{asset('app-assets/vendors/js/tables/datatable/datatables.min.js')}}"></script>
+    <script src="{{asset('app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js')}}"></script>
+    <script src="{{asset('app-assets/vendors/js/tables/datatable/dataTables.select.min.js')}}"></script>
+    <script src="{{asset('app-assets/vendors/js/tables/datatable/dataTables.colReorder.min.js')}}"></script>
+    <script src="{{asset('app-assets/vendors/js/tables/datatable/dataTables.buttons.min.js')}}"></script>
+    <script src="{{asset('app-assets/vendors/js/tables/datatable/buttons.bootstrap4.min.js')}}"></script>
+    <script src="{{asset('app-assets/vendors/js/tables/datatable/dataTables.fixedHeader.min.js')}}"></script>
     <!-- END: Page JS-->
 
   </body>

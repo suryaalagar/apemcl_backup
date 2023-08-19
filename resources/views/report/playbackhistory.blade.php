@@ -40,14 +40,7 @@
                             <label>Select Vehicle</label>
                             <div class="input-group">
 
-                                {{-- <select class="select2 form-control" id="vehicle_id" name="vehicle_id">
-                                    <option>Select Vehicle Name</option>
-                                    <?php if ($vehicle_details) {
-                                        foreach ($vehicle_details as $dlist) { ?>
-                                            <option value="<?php echo $dlist->deviceimei; ?>"><?php echo $dlist->vehiclename . ' - ' . $dlist->deviceimei; ?></option>
-                                    <?php  }
-                                    } ?>
-                                </select> --}}
+                                
 
                                 <input type="hidden" id="path_coords">
                                 <!-- <input type="text" id="settime_clear">  -->

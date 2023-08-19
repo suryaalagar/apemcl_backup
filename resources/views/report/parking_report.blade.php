@@ -39,9 +39,8 @@
                                                 <thead>
                                                     <tr>
                                                         <th>S.No</th>
-                                                        <th>device_no</th>
-                                                        <th>start_location</th>
-                                                        <th>end_location</th>
+                                                        <th>Vehicle ID</th>
+                                                        <th>Device Imei</th>
                                                         <th>Start Time</th>
                                                         <th>End Time</th>
                                                         <th>Duration</th>
@@ -118,46 +117,38 @@
     <script>
         $(document).ready(function() {
             $('#datatable').DataTable({
-                
+
                 processing: true,
                 serverSide: true,
                 method: 'GET',
                 ajax: "{{ route('parkingreport.getData') }}",
                 columns: [{
-                        data: 'id',
-                        name: 'id'
+                        data: 'S No',
+                        name: 'S No'
                     },
                     {
-                        data: 'device_no',
-                        name: 'device_no'
+                        data: 'vehicle_id',
+                        name: 'vehicle_id'
                     },
                     {
-                        data: 'start_location',
-                        name: 'start_location'
+                        data: 'device_imei',
+                        name: 'device_imei'
                     },
                     {
-                        data: 'end_location',
-                        name: 'end_location'
+                        data: 'start_datetime',
+                        name: 'start_datetime'
                     },
                     {
-                        data: 'start_day',
-                        name: 'start_day'
+                        data: 'end_datetime',
+                        name: 'end_datetime'
                     },
                     {
-                        data: 'end_day',
-                        name: 'end_day'
-                    },
-                    {
-                        data: 'total_km',
-                        name: 'total_km'
-                    },
-                    {
-                        data: 'created_at',
-                        name: 'created_at'
-                    },
+                        data: 'Action',
+                        name: 'Action'
+                    }
 
                 ]
-                
+
             });
         });
     </script>
@@ -183,37 +174,38 @@ echo"complete";die;
         });
         map.addLayer(Google_layer);
         $('.showModal').on('click', function() {
-            // console.log(lat);
+            alert("hello");
             var lat = $(this).data('lat');
             var lng = $(this).data('lng');
             setTimeout(function() {
                 map.invalidateSize();
-
                 showMap(lat, lng);
             }, 200);
         });
 
         function showMap(lat, lng) {
 
-
             var mark_img = "{{ 'assets/dist/img/icon/marker_loc.png' }}";
 
             var redIcon = new L.Icon({
                 iconUrl: mark_img
             });
-            // var s_lat = 17.538310;
-            // var s_lng = 79.210775;
+
             var startCoords = [lat, lng];
             console.log(startCoords);
 
             StartMarker1 = L.marker(startCoords, {
                 icon: redIcon
             }).addTo(map);
-
+            // map.setZoom(10);
+            // console.log(map.getZoom());
+            // map.setMinZoom(map.getZoom());            
             var group = new L.featureGroup([StartMarker1]);
 
             map.fitBounds(group.getBounds());
-            StartMarker1.bindPopup("Andra").openPopup();
+            // var popup = L.popup()
+            //     .setContent("I am a standalone popup.");
+            StartMarker1.bindPopup("hello").openPopup();
             // StartMarker1.bindPopup().openPopup();
             map.setView(startCoords, 12);
         }
