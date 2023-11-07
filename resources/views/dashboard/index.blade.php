@@ -5,6 +5,7 @@
             #map {
                 height: 100%;
             }
+
         </style>
     @endpush
     <!--stats-->
@@ -112,27 +113,33 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script> --}}
 @endsection
 @push('scripts')
+
     <script type="text/javascript">
-        var marker;
+        // var marker;
         var markers = [];
         var map = L.map('map').setView([10.84125, 79.84266000000001], 6);
         // create a new tile layer
-        var tileUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            layer = new L.TileLayer(tileUrl, {
-                attribution: 'Maps © <a href=\"www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors',
-                maxZoom: 15,
-                noWrap: true,
-            });
+        // var tileUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        //     layer = new L.TileLayer(tileUrl, {
+        //         attribution: 'Maps © <a href=\"www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors',
+        //         maxZoom: 15,
+        //         noWrap: true,
+        //     });
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20
+        }).addTo(map);
+
         // L.control.zoom({
         //     position: 'topright'
         // }).addTo(map);
         // add the layer to the map
         // Google Layer
-        var Google_layer = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-        });
-        map.addLayer(Google_layer);
+        // var Google_layer = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+        //     maxZoom: 20,
+        //     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        // });
+        // map.addLayer(Google_layer);
+
         var fg = L.featureGroup().addTo(map);
         var assetLayerGroup = new L.LayerGroup();
         var first_time = true;
@@ -198,28 +205,28 @@
                         });
 
                         var angle = data[i].angle;
-                        //     var tooltipOptions = {
-                        //         permanent: false,
-                        //         sticky: true,
-                        //         direction: 'top',
-                        //         offset: [0, -30]
-                        //     };
+                        // var angle = ;
+                        // var angle = ;
 
-
-                        marker = new L.marker([data[i].lattitute, data[i].longitute], {
+                        // var tooltipOptions = {
+                        //     permanent: false,
+                        //     sticky: true,
+                        //     direction: 'top',
+                        //     offset: [0, -30]
+                        // };
+                        // marker.bindTooltip(
+                        //     "<div style='background:lightgreen;box-shadow: 0 1px 3px rgba(0,0,0,0.4);border: 0px solid lightyellow; padding:1px 3px 1px 3px'><b> Vehicle : " +
+                        //     markerData.vehiclename + "<br>Speed:" + markerData.speed +
+                        //     " Kms/Hr <br> Last Update at:" + markerData
+                        //     .updatedon + "</b>", tooltipOptions).openTooltip();
+                        // movingMarkers.push(marker);
+                        var myLatLng = L.latLng([data[i].lattitute, data[i].longitute]);
+                        var marker = new L.marker(myLatLng, {
                                 icon: redIcon,
                                 rotationAngle: angle
                             })
+                            .bindPopup(" Vehicle  : " + data[i].vehicle_name)
                             .addTo(fg);
-                        //         .bindTooltip("<div style='background:" + colour +
-                        //             ";box-shadow: 0 1px 3px rgba(0,0,0,0.4);border: 0px solid lightyellow; padding:1px 3px 1px 3px'><b> Vehicle : " +
-                        //             data[i].vehiclename + "</b><br><b>Status:" + current_status +
-                        //             "</b><br><b>Speed:" + speed + "Km/Hr</b><br><b>Last Update:" + data[i]
-                        //             .updatedon + "</b><br><b>Since:" + data[i].last_dur + "</b>", tooltipOptions)
-                        //         .openTooltip()
-                        //         //.bindPopup(" Vehicle  : " + data[i].vehiclename)
-                        //         .addTo(fg);
-
 
                         // map.removeLayer(marker);
                         map.addLayer(marker);

@@ -80,7 +80,9 @@
     <script src="{{ asset('assets/js/dataTables.dataTables.js') }}"></script>
     <script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/js/jquery.dataTables.js') }}"></script>
-    <script src="{{asset('assets/plugins/osm/leaflet.rotatedMarker.js')}}"></script>
+    {{-- <script src="{{asset('assets/plugins/osm/leaflet.rotatedMarker.js')}}"></script> --}}
+    <script src="{{ asset('assets/plugins/osm/leaflet-arrowheads.js') }}"></script>
+    <script src="{{ asset('assets/plugins/osm/leaflet.polylineDecorator.js') }}"></script>
 
     @stack('scripts')
 </body>

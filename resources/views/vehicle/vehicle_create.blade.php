@@ -103,15 +103,19 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(data) {
-                    // alert(data.message);
-                    // $.unblockUI();
+
                     if (data.message == 'Success') {
                         toastr.success("Data Updated Successfully!", "INSERT", {
                             progressBar: !0
                         });
-                        window.location.href ='{{route("vehicle.index")}}';
+                        window.location.href = '{{ route('vehicle.index') }}';
+                    }
+                    if (data.message == 'validaton_error') {
+                        toastr.warning('Validate Error!', "Decline", {
+                            progressBar: !0
+                        });
                     } else {
-                        toastr.success("Data Not Inserted!", "Decline", {
+                        toastr.warning("Data Not Inserted!", "Decline", {
                             progressBar: !0
                         });
                     }

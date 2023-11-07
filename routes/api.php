@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\CronJob;
 use App\Http\Controllers\API\IdleReportController;
+use App\Http\Controllers\API\VehicleApiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,5 +22,9 @@ use Illuminate\Support\Facades\Route;
 
 // Route::middleware('auth')->group(function () {
 // });
-Route::get('idle_report', [IdleReportController::class,'index']);
-Route::POST('add_tripplan', [CronJob::class,'add_trip_plan']);
+Route::get('idle_report', [IdleReportController::class, 'index']);
+Route::POST('add_tripplan', [CronJob::class, 'add_trip_plan']);
+Route::get('route_devation_cron', [CronJob::class, 'route_devation_cron']);
+Route::POST('vehicle_status', [VehicleApiController::class, 'vehicle_status']);
+Route::POST('create_polyline', [CronJob::class,'create_polyline']);
+

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('client_id')->nullable();
             $table->integer('route_id')->nullable();
             $table->string('route_name')->nullable();
-            $table->string('vehicle_imei')->nullable();
+            $table->string('device_imei')->nullable();
             $table->string('vehicle_name')->nullable();
             $table->string('route_deviate_outtime')->nullable();
             $table->string('route_deviate_intime')->nullable();

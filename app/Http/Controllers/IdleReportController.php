@@ -16,18 +16,21 @@ class IdleReportController extends Controller
     public function index(Request $request)
     {
 
-        // $idle_data = IdleReport::get();
-        // return view('report.idle_report', compact('idle_data'));
-        return view('report.idle_report');
+        $from_date = date('Y-m-d H:i:s', strtotime('00:00:00'));
+        $to_date = date('Y-m-d H:i:s', strtotime('23:59:59'));
+        return view('report.idle_report',compact( 'from_date', 'to_date'));
     }
 
     public function getData(Request $request)
     {
-
+        $fromdate = date('Y-m-d H:i:s', strtotime($request->input('fromdate')));
+        $todate = date('Y-m-d H:i:s', strtotime($request->input('todate')));
+        $address =  $request->input('active');
         $totalFilteredRecord = $totalDataRecord = $draw_val = "";
         $columns_list = array(
             0 => 'id'
         );
+        $start = $request->input('start') + 1;
 
         $totalDataRecord = IdleReport::count();
 
@@ -40,8 +43,10 @@ class IdleReportController extends Controller
 
         if (empty($request->input('search.value'))) {
             $post_data = IdleReport::offset($start_val)
+                ->whereBetween('start_datetime', [$fromdate, $todate])
                 ->limit($limit_val)
                 ->orderBy($order_val, $dir_val)
+                ->select('vehicle_id', 'device_imei', 'start_datetime', 'end_datetime', 'start_latitude', 'start_longitude', DB::raw('TIMEDIFF(end_datetime, start_datetime) AS time_difference'))
                 ->get();
         } else {
             $search_text = $request->input('search.value');
@@ -53,6 +58,7 @@ class IdleReportController extends Controller
                 ->offset($start_val)
                 ->limit($limit_val)
                 ->orderBy($order_val, $dir_val)
+                ->select('vehicle_id', 'device_imei', 'start_datetime', 'end_datetime', 'start_latitude', 'start_longitude', DB::raw('TIMEDIFF(end_datetime, start_datetime) AS time_difference'))
                 ->get();
 
             $totalFilteredRecord = IdleReport::where('id', 'LIKE', "%{$search_text}%")
@@ -62,30 +68,32 @@ class IdleReportController extends Controller
                 ->count();
         }
 
-        // if (!empty($post_data)) {
-        //     $draw_val = $request->input('draw');
-        //     $get_json_data = array(
-        //         "draw"            => intval($draw_val),
-        //         "recordsTotal"    => intval($totalDataRecord),
-        //         "recordsFiltered" => intval($totalFilteredRecord),
-        //         "data"            => $post_data
-        //     );
+        if (!empty($post_data)) {
+            $draw_val = $request->input('draw');
+            $get_json_data = array(
+                "draw"            => intval($draw_val),
+                "recordsTotal"    => intval($totalDataRecord),
+                "recordsFiltered" => intval($totalFilteredRecord),
+                "data"            => $post_data
+            );
             $count = 1;
-            foreach ($post_data as $data) {
-                $edit = '<button type="button" class="btn btn-success showModal"
-                data-toggle="modal" data-target="#myModal"
-                data-lat="' . $data->start_latitude . '" data-lng="' . $data->start_longitude . '">
-                Map View
-            </button>';
+            foreach ($post_data  as $index =>  $data) {
+                $serialNumber = $start + $index;
+                $park_address = "Loading...";
+                if ($address == 1) {
+                    $park_address = $this->get_address($data->start_latitude, $data->start_longitude);
+                }
+                $edit = '<button type="button" class="btn btn-success showModal"  onclick="parking_data(' . "$data->start_latitude" . "," . "$data->start_longitude" . ');" >Map View</button>';
                 // $delete = '<a><i class="fa fa-trash " aria-hidden="true"></i></a>';
 
                 $array_data[] = array(
-                    'S No' => $count++,
+                    'S No' => $serialNumber,
                     'vehicle_id' => $data->vehicle_id,
                     'device_imei' => $data->device_imei,
                     'start_datetime' => $data->start_datetime,
                     'end_datetime' => $data->end_datetime,
-                    // 'duration' => $data->end_datetime - $data->start_datetime,
+                    'duration' => $data->time_difference,
+                    'park_address' => $park_address,
                     'Action' => $edit
                 );
             }
@@ -99,7 +107,7 @@ class IdleReportController extends Controller
                 );
 
                 echo json_encode($get_json_data);
-            
+            }
         }
     }
     /**

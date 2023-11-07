@@ -37,8 +37,20 @@ class DashboardController extends Controller
             'speed',
             'angle',
             DB::raw('TIMESTAMPDIFF(MINUTE, device_updatedtime, "'.$current_time.'") AS update_time')
-        )->get()->toArray();
-        return $query;
+        )->get();
+        $result = [];
+        foreach ($query as $key => $value) {
+            $result[$key]['vehicle_name'] = $value->vehicle_name??"";
+            $result[$key]['deviceimei'] = $value->deviceimei??"";
+            $result[$key]['lattitute'] = $value->lattitute??00.0000;
+            $result[$key]['longitute'] = $value->longitute??00.0000;
+            $result[$key]['ignition'] = $value->ignition??0;
+            $result[$key]['speed'] = $value->speed??0;
+            $result[$key]['angle'] = $value->angle??90;
+            $result[$key]['update_time'] = $value->update_time??"";
+
+        }
+        return $result;
     }
     /**
      * Show the form for creating a new resource.

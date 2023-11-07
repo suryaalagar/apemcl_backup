@@ -7,7 +7,7 @@ use App\Http\Requests\StorevehicleRequest;
 use App\Http\Requests\UpdatevehicleRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 
 
 class VehicleController extends Controller
@@ -37,6 +37,8 @@ class VehicleController extends Controller
         $order_val = $columns_list[$request->input('order.0.column')];
         $dir_val = $request->input('order.0.dir');
 
+        $start = $request->input('start') + 1;
+
         if (empty($request->input('search.value'))) {
             $post_data = Vehicle::offset($start_val)
                 ->limit($limit_val)
@@ -60,19 +62,21 @@ class VehicleController extends Controller
                 ->orWhere('end_location', 'LIKE', "%{$search_text}%")
                 ->count();
         }
-        $count = 1;
-        foreach ($post_data as $data) {
+
+        foreach ($post_data as $index => $data) {
+            $serialNumber = $start + $index;
             $edit = '<a href="' . route('vehicle.edit', ['id' => $data->id]) . '"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
             $delete = '<a><i class="fa fa-trash " aria-hidden="true"></i></a>';
 
             $array_data[] = array(
-                'S No' => $count++,
+                'S No' => $serialNumber,
                 'vehicle_name' => $data->vehicle_name,
                 'device_imei' => $data->device_imei,
                 'sim_mob_no' => $data->sim_mob_no,
                 'Action' => $edit . ' ' . $delete
             );
         }
+
         if (!empty($array_data)) {
             $draw_val = $request->input('draw');
             $get_json_data = array(
@@ -96,8 +100,22 @@ class VehicleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorevehicleRequest $request)
+    public function store(Request $request)
     {
+
+        $validator = Validator::make($request->all(), [
+            'sim_mob_no' => 'required|unique:vehicles,sim_mob_no|integer',
+            'device_imei' => 'required|unique:vehicles,device_imei|integer'
+        ]);
+
+
+        if ($validator->fails()) {
+
+            return response([
+                'message' => "validaton_error"
+            ]);
+        }
+
         try {
 
             DB::beginTransaction();
@@ -106,13 +124,22 @@ class VehicleController extends Controller
             $Vehicle->device_imei = $request->input('device_imei');
             $Vehicle->sim_mob_no = $request->input('sim_mob_no');
             $Vehicle->vehicle_type_id = $request->input('vehicle_type_id');
+            $Vehicle->status = $request->input('status');
             $Vehicle->save();
+            $last_id = $Vehicle->id;
+
+            DB::table('live_data')->insert([
+                'vehicle_id' => $last_id, // Replace with your actual column names and values
+                'vehicle_name' => $request->input('vehicle_name'),
+                'deviceimei' => $request->input('device_imei'),
+                'vehicle_status' => 1,
+            ]);
             DB::commit();
-            
-            return response(['message'=>"Success"]);
+
+            return response(['message' => "Success"]);
         } catch (\Exception $e) {
             DB::rollback();
-            return response(['message'=>"Failure"]);
+            return response(['message' => "Failure"]);
         }
     }
 
@@ -130,16 +157,28 @@ class VehicleController extends Controller
     public function edit(Request $request)
     {
         $vehicle =  Vehicle::find($request->id);
-        return view('vehicle.vehicle_edit',compact('vehicle'));
-        // return view('vehicle.vehicle_edit');
-        // echo json_encode($vehicle);
+        return view('vehicle.vehicle_edit', compact('vehicle'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatevehicleRequest $request, vehicle $vehicle)
-    { 
+    public function update(Request $request)
+    {
+
+        $id = $request->input('id');
+        $validator = Validator::make($request->all(), [
+            'sim_mob_no' => 'required|integer|unique:vehicles,sim_mob_no,' . $id,
+            'device_imei' => 'required|integer|unique:vehicles,device_imei,' . $id
+        ]);
+
+        if ($validator->fails()) {
+
+            return response([
+                'message' => "validaton_error"
+            ]);
+        }
+
         DB::beginTransaction();
         try {
             $vehicle = Vehicle::find($request->id);
@@ -148,12 +187,20 @@ class VehicleController extends Controller
             $vehicle->sim_mob_no = $request->sim_mob_no;
             $vehicle->vehicle_type_id = $request->vehicle_type_id;
             $vehicle->save();
+
+            DB::table('live_data')
+                ->where('vehicle_id', $request->id)
+                ->update([
+                    'vehicle_name' => $request->vehicle_name,
+                    'deviceimei' =>  $request->device_imei
+                ]);
+
             DB::commit();
             // return redirect()->route('fallback-route');
-            return response(['message'=>"Success"]);
+            return response(['message' => "Success"]);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response(['message'=>"Failure"]);
+            return response(['message' => "Failure"]);
         }
     }
 
@@ -162,7 +209,6 @@ class VehicleController extends Controller
      */
     public function destroy(vehicle $vehicle)
     {
-       
     }
 
     // public function sim_import(Request $request)

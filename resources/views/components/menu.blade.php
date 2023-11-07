@@ -28,7 +28,7 @@
                             data-i18n="Dashboard">Reports</span><span
                             class="badge badge badge-primary badge-pill float-right mr-2">3</span></a>
                     <ul class="menu-content">
-                        <li class=" nav-item"><a href="{{ route('tripplanreport.index') }}"><i
+                        <li class=" nav-item"><a href="{{ route('tripplanreport.tripplan_complete_report') }}"><i
                                     class="feather icon-car"></i><span class="menu-title" data-i18n="Trip_plan">Trip
                                     Plan</span></a>
                         </li>
@@ -79,6 +79,14 @@
                         <li class=" nav-item"><a href="{{ route('vehicle.index') }}"><i
                                     class="feather icon-car"></i><span class="menu-title"
                                     data-i18n="Trip_plan">Vehicle</span></a>
+                        </li>
+                    </ul>
+                </li>
+                <li class=" nav-item"><a href="#"><i class="feather icon-truck"></i><span class="menu-title"
+                            data-i18n="Dashboard">Route</span></a>
+                    <ul class="menu-content">
+                        <li class=" nav-item"><a href="{{ route('trip_routes.index') }}"><i class="feather icon-car"></i><span
+                                    class="menu-title" data-i18n="Trip_plan">Route</span></a>
                         </li>
                     </ul>
                 </li>

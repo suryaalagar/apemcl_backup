@@ -138,25 +138,6 @@
                                                 </thead>
 
                                                 <tbody>
-                                                    {{-- @php
-                                                        $s_no = 1;
-                                                    @endphp
-                                                    @foreach ($idle_data as $idle)
-                                                        <tr>
-                                                            <td>{{ $s_no++ }}</td>
-                                                            <td>{{ $idle->vehiclename }}</td>
-                                                            <td>{{ $idle->start_location }}</td>
-                                                            <td>{{ $idle->end_location }}</td>
-                                                            <td>{{ $idle->start_day }}</td>
-                                                            <td>{{ $idle->end_day }}</td>
-                                                            <td>{{ $idle->duration }}</td>
-                                                            <td><button type="button" class="btn btn-success showModal"
-                                                                    data-toggle="modal" data-target="#myModal"
-                                                                    data-lat='{{$idle->s_lat}}' data-lng='{{$idle->s_lng}}'>
-                                                                    Map View
-                                                                </button></td>
-                                                        </tr>
-                                                    @endforeach --}}
                                                 </tbody>
                                             </table>
                                         </div>
